@@ -2,6 +2,8 @@ package com.github.mietteinen.gui;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -10,6 +12,9 @@ public class MainWindow extends JFrame {
     private JFrame window;
     private JPanel mainPanel;
     private JPanel controlPanel;
+    private SortingVisualizer visualizer;
+
+    GridBagConstraints gbcVisualizer;
 
     public MainWindow() {
 
@@ -20,30 +25,44 @@ public class MainWindow extends JFrame {
         window.setMinimumSize(new Dimension(640, 480));
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         window.setLocationRelativeTo(null);
+        window.setLayout(new BoxLayout(window.getContentPane(), BoxLayout.Y_AXIS));
 
-        mainPanel = new JPanel();
-        controlPanel = new JPanel();
-
-        mainPanel.setLayout(new BorderLayout());
-
+        mainPanel = new JPanel(new GridBagLayout());
+        controlPanel = new JPanel(new GridBagLayout());
+        
         // Make the main panel take up 80% of the window's height.
         mainPanel.setPreferredSize(new Dimension(window.getWidth(), 
                                           (int) (window.getHeight() * 0.8)));
-
+        
         // Make the control panel take up the rest of the window's height.
         controlPanel.setPreferredSize(new Dimension(window.getWidth(), 
                                              (int) (window.getHeight()
-                                                  - mainPanel.getHeight())));
+                                               - mainPanel.getHeight())));
 
         // Add the panels to the window.
         window.add(mainPanel, BorderLayout.NORTH);
         window.add(controlPanel, BorderLayout.SOUTH);
 
-        // Create a new SortingVisualizer object and add it to the main panel.
-        SortingVisualizer visualizer = new SortingVisualizer(mainPanel, randomList(10));
-        mainPanel.add(visualizer);
-        //visualizer.setSize((int) (mainPanel.getWidth() * 0.8), 
-        //                   (int) (mainPanel.getHeight() * 0.8));
+        // Add a component listener to the window to update the panel height.
+        window.addComponentListener(new ComponentAdapter() {
+            public void componentResized(ComponentEvent e) {
+                updatePanelHeight();
+            }
+        });
+        
+        visualizer = new SortingVisualizer(mainPanel, randomList(10));
+        
+        // Set the constraints for the visualizer and add it to mainPanel.
+        gbcVisualizer = new GridBagConstraints();
+        gbcVisualizer.gridx = 0;
+        gbcVisualizer.gridy = 0;
+        gbcVisualizer.weightx = 1.0;
+        gbcVisualizer.weighty = 1.0;
+        gbcVisualizer.fill = GridBagConstraints.BOTH;
+        mainPanel.add(visualizer, gbcVisualizer);
+
+        mainPanel.setBackground(Color.BLACK);
+        controlPanel.setBackground(Color.GREEN);
     }
 
     public void show() {
@@ -51,15 +70,16 @@ public class MainWindow extends JFrame {
     }
 
     public void updatePanelHeight() {
-        
+
         int newMainPanelHeight = (int) (window.getHeight() * 0.8);
         int newControlPanelHeight = (int) (window.getHeight() - newMainPanelHeight);
 
-        mainPanel.setSize(new Dimension(window.getWidth(), newMainPanelHeight));
-        controlPanel.setSize(new Dimension(window.getWidth(), newControlPanelHeight));
+        mainPanel.setPreferredSize(new Dimension(window.getWidth(), newMainPanelHeight));
+        controlPanel.setPreferredSize(new Dimension(window.getWidth(), newControlPanelHeight));
 
-        mainPanel.revalidate();
-        controlPanel.revalidate();
+        if (!window.isResizable()) {
+            window.pack();
+        }
     }
 
     public ArrayList<Integer> randomList(int size) {

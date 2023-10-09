@@ -20,25 +20,30 @@ public class SortingVisualizer extends JPanel {
 
     @Override
     protected void paintComponent(Graphics g) {
+        
         super.paintComponent(g);
+        bars.clear();
     
-        int barWidth = this.getWidth() / values.size();
+        int barWidth = (int) (this.getWidth() * 0.8) / values.size();
+        int heightMultiplier = (int) (this.getHeight() * 0.8) / Collections.max(values);
+        int xMidpoint = this.getWidth() / 2;
 
         for (int i = 0; i < values.size(); i++) {
 
             int value = values.get(i);
 
             // Calculate the height of the bar based on the value.
-            int barHeight = value * (this.getHeight() / Collections.max(values));
+            int barHeight = value * heightMultiplier;
 
             // Calculate the x coordinate of the bar.
             // The bars should be evenly distributed across the window.
             int yCoord = (mainPanel.getHeight() - barHeight) / 2;
-            int xCoord = i * barWidth;
+            
+            // Position the bars relative to the midpoint of the window.
+            int xCoord = xMidpoint - (values.size() * barWidth) / 2 + i * barWidth;
 
             // Create a new ValueBar object and draw it.
             ValueBar bar = new ValueBar(value, xCoord, yCoord, barWidth, barHeight, Color.WHITE);
-            System.out.println("Bar " + i + ": " + bar);
             bars.add(bar);
             bar.draw(g);
         }
