@@ -31,11 +31,23 @@ public class ValueBar {
         g.drawRect(xCoord, yCoord, width, height);
     }
 
+    public void update(int value, int x, int y, int width, int height) {
+        this.value = value;
+        this.xCoord = x;
+        this.yCoord = y;
+        this.width = width;
+        this.height = height;
+    }
+
     public void move(int x) {
         this.xCoord = x;
     }
 
     public int getValue() {
         return value;
+    }
+
+    public int getWidth() {
+        return width;
     }
 }

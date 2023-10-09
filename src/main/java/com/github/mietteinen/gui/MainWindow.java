@@ -50,7 +50,7 @@ public class MainWindow extends JFrame {
             }
         });
         
-        visualizer = new SortingVisualizer(mainPanel, randomList(10));
+        visualizer = new SortingVisualizer(mainPanel, randomList(100));
         
         // Set the constraints for the visualizer and add it to mainPanel.
         gbcVisualizer = new GridBagConstraints();
@@ -88,7 +88,7 @@ public class MainWindow extends JFrame {
         Random random = new Random();
 
         for (int i = 0; i < size; i++) {
-            list.add(random.nextInt(100));
+            list.add(random.nextInt(100 - 10 + 1) + 10);
         }
 
         return list;
