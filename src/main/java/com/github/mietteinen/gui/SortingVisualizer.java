@@ -8,11 +8,14 @@ import java.util.ArrayList;
 
 public class SortingVisualizer extends JPanel {
     
+    private JPanel mainPanel;
     private ArrayList<Integer> values;
     private ArrayList<ValueBar> bars;
 
-    public SortingVisualizer(ArrayList<Integer> values) {
+    public SortingVisualizer(JPanel mainPanel, ArrayList<Integer> values) {
+        this.mainPanel = mainPanel;
         this.values = values;
+        this.bars = new ArrayList<ValueBar>();
     }
 
     @Override
@@ -20,7 +23,6 @@ public class SortingVisualizer extends JPanel {
         super.paintComponent(g);
     
         int barWidth = this.getWidth() / values.size();
-        int yCoord = this.getHeight() / 2;
 
         for (int i = 0; i < values.size(); i++) {
 
@@ -31,10 +33,12 @@ public class SortingVisualizer extends JPanel {
 
             // Calculate the x coordinate of the bar.
             // The bars should be evenly distributed across the window.
+            int yCoord = (mainPanel.getHeight() - barHeight) / 2;
             int xCoord = i * barWidth;
 
             // Create a new ValueBar object and draw it.
-            ValueBar bar = new ValueBar(value, xCoord, yCoord, barWidth, barHeight, Color.BLACK);
+            ValueBar bar = new ValueBar(value, xCoord, yCoord, barWidth, barHeight, Color.WHITE);
+            System.out.println("Bar " + i + ": " + bar);
             bars.add(bar);
             bar.draw(g);
         }

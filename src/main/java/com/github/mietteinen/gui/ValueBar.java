@@ -22,8 +22,13 @@ public class ValueBar {
     }
 
     public void draw(Graphics g) {
+        // Draw the bar.
         g.setColor(color);
         g.fillRect(xCoord, yCoord, width, height);
+
+        // Outline the bar.
+        g.setColor(Color.BLACK);
+        g.drawRect(xCoord, yCoord, width, height);
     }
 
     public void move(int x) {

@@ -8,6 +8,8 @@ import java.util.Random;
 public class MainWindow extends JFrame {
     
     private JFrame window;
+    private JPanel mainPanel;
+    private JPanel controlPanel;
 
     public MainWindow() {
 
@@ -15,11 +17,14 @@ public class MainWindow extends JFrame {
 
         window.setTitle("Life is a Simulation");
         window.setSize(800, 600);
+        window.setMinimumSize(new Dimension(640, 480));
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         window.setLocationRelativeTo(null);
 
-        JPanel mainPanel = new JPanel();
-        JPanel controlPanel = new JPanel();
+        mainPanel = new JPanel();
+        controlPanel = new JPanel();
+
+        mainPanel.setLayout(new BorderLayout());
 
         // Make the main panel take up 80% of the window's height.
         mainPanel.setPreferredSize(new Dimension(window.getWidth(), 
@@ -35,12 +40,26 @@ public class MainWindow extends JFrame {
         window.add(controlPanel, BorderLayout.SOUTH);
 
         // Create a new SortingVisualizer object and add it to the main panel.
-        SortingVisualizer visualizer = new SortingVisualizer(randomList(100));
+        SortingVisualizer visualizer = new SortingVisualizer(mainPanel, randomList(10));
         mainPanel.add(visualizer);
+        //visualizer.setSize((int) (mainPanel.getWidth() * 0.8), 
+        //                   (int) (mainPanel.getHeight() * 0.8));
     }
 
     public void show() {
         window.setVisible(true);
+    }
+
+    public void updatePanelHeight() {
+        
+        int newMainPanelHeight = (int) (window.getHeight() * 0.8);
+        int newControlPanelHeight = (int) (window.getHeight() - newMainPanelHeight);
+
+        mainPanel.setSize(new Dimension(window.getWidth(), newMainPanelHeight));
+        controlPanel.setSize(new Dimension(window.getWidth(), newControlPanelHeight));
+
+        mainPanel.revalidate();
+        controlPanel.revalidate();
     }
 
     public ArrayList<Integer> randomList(int size) {
