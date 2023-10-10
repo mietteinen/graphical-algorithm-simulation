@@ -46,8 +46,12 @@ public class ValueBar {
     public int getValue() {
         return value;
     }
-
+    
     public int getWidth() {
         return width;
+    }
+
+    public void setColor(Color color) {
+        this.color = color;
     }
 }

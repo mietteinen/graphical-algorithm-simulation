@@ -1,6 +1,9 @@
 package com.github.mietteinen.gui;
 
 import javax.swing.*;
+
+import com.github.mietteinen.algorithms.Algorithms;
+
 import java.awt.*;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
@@ -50,7 +53,7 @@ public class MainWindow extends JFrame {
             }
         });
         
-        visualizer = new SortingVisualizer(mainPanel, randomList(100));
+        visualizer = new SortingVisualizer(mainPanel, randomList(10));
         
         // Set the constraints for the visualizer and add it to mainPanel.
         gbcVisualizer = new GridBagConstraints();
@@ -63,6 +66,8 @@ public class MainWindow extends JFrame {
 
         mainPanel.setBackground(Color.BLACK);
         controlPanel.setBackground(Color.GREEN);
+
+        Algorithms.bubbleSort(visualizer.getValues(), visualizer.getBars());
     }
 
     public void show() {

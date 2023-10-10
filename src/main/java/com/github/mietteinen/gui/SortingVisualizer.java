@@ -27,6 +27,14 @@ public class SortingVisualizer extends JPanel {
         });
     }
 
+    public ArrayList<Integer> getValues() {
+        return values;
+    }
+
+    public ArrayList<ValueBar> getBars() {
+        return bars;
+    }
+
     private void updateBars() {
     
         int barWidth = (int) (this.getWidth() * 0.8) / values.size();
