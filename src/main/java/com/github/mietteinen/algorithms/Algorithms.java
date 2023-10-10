@@ -1,5 +1,6 @@
 package com.github.mietteinen.algorithms;
 
+import com.github.mietteinen.gui.SortingVisualizer;
 import com.github.mietteinen.gui.ValueBar;
 
 import java.awt.Color;
@@ -12,19 +13,28 @@ public class Algorithms {
     }
 
     // Implement bubbleSort in a way that it can be used with the SortingVisualizer.
-    public static void bubbleSort(ArrayList<Integer> lst, ArrayList<ValueBar> bars) {
+    public static void bubbleSort(SortingVisualizer visualizer) {
+
+        ArrayList<Integer> lst = visualizer.getValues();
+        ArrayList<ValueBar> bars = visualizer.getBars();
 
         int size = lst.size();
         int temp = 0;
 
         for (int i = 0; i < size; i++) {
             for (int j = 1; j < (size - i); j++) {
+                
+                ValueBar currentBar = bars.get(j);
+                ValueBar previousBar = bars.get(j - 1);
 
                 // Check if j-1 and j are valid indices for both lst and bars
-                if (j - 1 >= 0 && j < lst.size() && j < bars.size()) {
+                if (j - 1 >= 0 && j < size) {
+
                     // Update the bars.
-                    bars.get(j - 1).setColor(Color.RED);
-                    bars.get(j).setColor(Color.RED);
+                    //currentBar.setColor(Color.RED);
+                    //previousBar.setColor(Color.RED);
+
+                    //visualizer.updateBars();
 
                     if (lst.get(j - 1) > lst.get(j)) {
                         temp = lst.get(j - 1);
@@ -35,17 +45,22 @@ public class Algorithms {
                             System.out.println("Thread interrupted!");
                         }
 
-                        lst.set(j - 1, lst.get(j));
-                        lst.set(j, temp);
+                        visualizer.update(j - 1, j);
+                        //currentBar.drawOver(visualizer.getGraphics());
+                        //previousBar.drawOver(visualizer.getGraphics());
+                        //visualizer.updateBars();
                     }
 
-                // Reset the colors
-                bars.get(j - 1).setColor(Color.WHITE);
-                bars.get(j).setColor(Color.WHITE);  
+                    //visualizer.updateBars();
                 }
+                //System.out.println("Bar color: " + currentBar.getColor());
+                // Reset the colors
+                //currentBar.setColor(Color.WHITE);
+                //previousBar.setColor(Color.WHITE);
+                //System.out.println("Bar color: " + currentBar.getColor());
             }
-            //checkOrder(lst, bars);
         }
+        //checkOrder(lst, bars);
     }
 
     public static void checkOrder(ArrayList<Integer> lst, ArrayList<ValueBar> bars) {

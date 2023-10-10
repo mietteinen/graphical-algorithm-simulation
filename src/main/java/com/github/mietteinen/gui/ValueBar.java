@@ -22,6 +22,7 @@ public class ValueBar {
     }
 
     public void draw(Graphics g) {
+
         // Draw the bar.
         g.setColor(color);
         g.fillRect(xCoord, yCoord, width, height);
@@ -29,6 +30,17 @@ public class ValueBar {
         // Outline the bar.
         g.setColor(Color.BLACK);
         g.drawRect(xCoord, yCoord, width, height);
+    }
+
+    public void drawOver(Graphics g) {
+            
+            // Draw the bar.
+            g.setColor(Color.WHITE);
+            g.fillRect(xCoord, yCoord, width, height);
+    
+            // Outline the bar.
+            g.setColor(Color.WHITE);
+            g.drawRect(xCoord, yCoord, width, height);
     }
 
     public void update(int value, int x, int y, int width, int height) {
@@ -49,6 +61,10 @@ public class ValueBar {
     
     public int getWidth() {
         return width;
+    }
+
+    public Color getColor() {
+        return color;
     }
 
     public void setColor(Color color) {

@@ -55,6 +55,8 @@ public class MainWindow extends JFrame {
         
         visualizer = new SortingVisualizer(mainPanel, randomList(10));
         
+        System.out.println("Bars size: " + visualizer.getBars().size());
+
         // Set the constraints for the visualizer and add it to mainPanel.
         gbcVisualizer = new GridBagConstraints();
         gbcVisualizer.gridx = 0;
@@ -67,7 +69,20 @@ public class MainWindow extends JFrame {
         mainPanel.setBackground(Color.BLACK);
         controlPanel.setBackground(Color.GREEN);
 
-        Algorithms.bubbleSort(visualizer.getValues(), visualizer.getBars());
+        //Create a button in controlPanel to start the sorting.
+        JButton startButton = new JButton("Start");
+        startButton.addActionListener(e -> Algorithms.bubbleSort(visualizer));
+        controlPanel.add(startButton);
+
+        //Create a button in controlPanel to shuffle the list.
+        JButton shuffleButton = new JButton("Shuffle");
+        shuffleButton.addActionListener(e -> {
+            visualizer.setValues(randomList(10));
+            visualizer.updateBars();
+        });
+        controlPanel.add(shuffleButton);
+
+        //Algorithms.bubbleSort(visualizer);
     }
 
     public void show() {
