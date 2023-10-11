@@ -1,6 +1,9 @@
 package com.github.mietteinen.gui;
 
 import javax.swing.JPanel;
+
+import com.github.mietteinen.utilities.ThemeUtils;
+
 import java.awt.Graphics;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
@@ -13,11 +16,15 @@ public class SortingVisualizer extends JPanel {
     private JPanel mainPanel;
     private ArrayList<Integer> values;
     private ArrayList<ValueBar> bars;
+    private Color backgroundColor;
+    private Color foregroundColor;
 
     public SortingVisualizer(JPanel mainPanel, ArrayList<Integer> values) {
         this.mainPanel = mainPanel;
         this.values = values;
         this.bars = new ArrayList<ValueBar>();
+        this.backgroundColor = ThemeUtils.getBackgroundColor();
+        this.foregroundColor = ThemeUtils.getForegroundColor();
 
         createBars();
 
@@ -60,7 +67,7 @@ public class SortingVisualizer extends JPanel {
             int xCoord = xMidpoint - (values.size() * barWidth) / 2 + i * barWidth;
 
             bar.update(value, xCoord, yCoord, barWidth, barHeight);
-            bar.draw(this.getGraphics());
+            bar.repaint();
 
         }
         // Required for the bars to be updated immediately.
@@ -115,7 +122,7 @@ public class SortingVisualizer extends JPanel {
         super.paintComponent(g);
     
         // Clear the screen by filling it with the background color.
-        g.setColor(Color.WHITE);
+        g.setColor(foregroundColor);
         g.fillRect(0, 0, getWidth(), getHeight());
 
         for (ValueBar bar : bars)

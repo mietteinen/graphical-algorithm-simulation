@@ -3,6 +3,7 @@ package com.github.mietteinen.gui;
 import javax.swing.*;
 
 import com.github.mietteinen.algorithms.Algorithms;
+import com.github.mietteinen.utilities.ThemeUtils;
 
 import java.awt.*;
 import java.awt.event.ComponentAdapter;
@@ -16,10 +17,15 @@ public class MainWindow extends JFrame {
     private JPanel mainPanel;
     private JPanel controlPanel;
     private SortingVisualizer visualizer;
+    private Color backgroundColor;
+    private Color foregroundColor;
 
     GridBagConstraints gbcVisualizer;
 
     public MainWindow() {
+
+        this.backgroundColor = ThemeUtils.getBackgroundColor();
+        this.foregroundColor = ThemeUtils.getForegroundColor();
 
         window = new JFrame();
 
@@ -66,12 +72,12 @@ public class MainWindow extends JFrame {
         gbcVisualizer.fill = GridBagConstraints.BOTH;
         mainPanel.add(visualizer, gbcVisualizer);
 
-        mainPanel.setBackground(Color.WHITE);
-        controlPanel.setBackground(Color.GREEN);
+        mainPanel.setBackground(foregroundColor);
+        controlPanel.setBackground(backgroundColor);
 
         SpinnerModel sizeModel = new SpinnerNumberModel(10, 10, 1000, 10);
         JSpinner sizeSpinner = new JSpinner(sizeModel);
-        sizeSpinner.setPreferredSize(new Dimension(50, 25));
+        sizeSpinner.setPreferredSize(new Dimension(75, 25));
         controlPanel.add(sizeSpinner);
 
         //Create a button in controlPanel to start the sorting.
