@@ -7,10 +7,6 @@ import java.awt.Color;
 import java.util.ArrayList;
 
 public class Algorithms {
-    
-    private enum Algorithm {
-        BUBBLE_SORT
-    }
 
     private static int timeBetweenFrames;
 
@@ -32,9 +28,20 @@ public class Algorithms {
                 visualizer.updateBars();
                 
                 try {
+                    
                     Thread.sleep(timeBetweenFrames);
+
                 } catch (InterruptedException e) {
+
                     System.out.println("Thread interrupted!");
+
+                    // Reset the color of the bars.
+                    for (ValueBar bar : visualizer.getBars()) {
+                        bar.setColor(Color.WHITE);
+                    }
+                    visualizer.updateBars();
+
+                    return;
                 }
                 
                 // Swap the values if the current value is greater than the next value.
@@ -46,7 +53,6 @@ public class Algorithms {
                     }
                     
                 }
-                
                 
                 // Reset the color.
                 currentBar.setColor(Color.WHITE);

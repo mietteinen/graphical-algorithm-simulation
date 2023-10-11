@@ -11,14 +11,30 @@ import java.awt.event.ComponentEvent;
 import java.util.ArrayList;
 import java.util.Random;
 
+import static java.awt.GridBagConstraints.EAST;
+import static java.awt.GridBagConstraints.WEST;
+
 public class MainWindow extends JFrame {
     
+    // Main window and panels.
     private JFrame window;
     private JPanel mainPanel;
     private JPanel controlPanel;
+    
+    // All buttons.
     private JButton startButton;
+    private JButton stopButton;
     private JButton shuffleButton;
+    private JButton settingsButton;
+
+    // Sliders and spinners.
+    private JSlider sizeSlider;
+    private JSpinner sizeSpinner;
+    private JSlider speedSlider;
+    private JSpinner speedSpinner;
+
     private SortingVisualizer visualizer;
+
     private Color backgroundColor;
     private Color foregroundColor;
 
@@ -50,13 +66,21 @@ public class MainWindow extends JFrame {
         // Add a component listener to the window to update the panel height.
         window.addComponentListener(new ComponentAdapter() {
             public void componentResized(ComponentEvent e) {
+
                 updatePanelHeight();
+
+                // Hide the labels of the sliders if the window is too small.
+                if (window.getWidth() < 1150 && window.getHeight() < 575) {
+                    sizeSlider.setPaintLabels(false);
+                    speedSlider.setPaintLabels(false);
+                } else {
+                    sizeSlider.setPaintLabels(true);
+                    speedSlider.setPaintLabels(true);
+                }
             }
         });
         
         visualizer = new SortingVisualizer(mainPanel, randomList(10));
-        
-        System.out.println("Bars size: " + visualizer.getBars().size());
 
         // Set the constraints for the visualizer and add it to mainPanel.
         gbcVisualizer = new GridBagConstraints();
@@ -68,37 +92,8 @@ public class MainWindow extends JFrame {
         mainPanel.add(visualizer, gbcVisualizer);
 
         mainPanel.setBackground(foregroundColor);
-        controlPanel.setBackground(backgroundColor);
 
-        SpinnerModel sizeModel = new SpinnerNumberModel(10, 10, 1000, 10);
-        JSpinner sizeSpinner = new JSpinner(sizeModel);
-        sizeSpinner.setPreferredSize(new Dimension(75, 25));
-        controlPanel.add(sizeSpinner);
-
-        //Create a button in controlPanel to shuffle the list.
-        shuffleButton = new JButton("Shuffle");
-        shuffleButton.addActionListener(e -> {
-            visualizer.setValues(randomList(sizeSpinner.getValue().hashCode()));
-            visualizer.updateBars();
-        });
-        
-        //Create a button in controlPanel to start the sorting.
-        startButton = new JButton("Start");
-        startButton.addActionListener(e -> {
-            sort();
-        });
-
-        controlPanel.add(startButton);
-        controlPanel.add(shuffleButton);
-
-        // Create a slider in controlPanel to change the speed of the sorting.
-        JSlider speedSlider = new JSlider(JSlider.HORIZONTAL, 0, 50, 1);
-        speedSlider.setMajorTickSpacing(10);
-        speedSlider.setMinorTickSpacing(1);
-        speedSlider.setPaintTicks(true);
-        speedSlider.setPaintLabels(true);
-        speedSlider.addChangeListener(e -> Algorithms.setSpeed(speedSlider.getValue()));
-        controlPanel.add(speedSlider);
+        setupControlPanel();
 
         Algorithms.setSpeed(speedSlider.getValue());
 
@@ -110,7 +105,7 @@ public class MainWindow extends JFrame {
 
     public void updatePanelHeight() {
 
-        int newMainPanelHeight = (int) (window.getHeight() * 0.8);
+        int newMainPanelHeight = (int) (window.getHeight() * 0.7);
         int newControlPanelHeight = (int) (window.getHeight() - newMainPanelHeight);
 
         mainPanel.setPreferredSize(new Dimension(window.getWidth(), newMainPanelHeight));
@@ -135,12 +130,166 @@ public class MainWindow extends JFrame {
 
     private void sort() {
         Thread sortingThread = new Thread(() -> {
+
+            // Enable and disable the wanted buttons
+            // at the start of the sorting.
             shuffleButton.setEnabled(false);
             startButton.setEnabled(false);
+            stopButton.setEnabled(true);
+
             Algorithms.bubbleSort(visualizer);
+
+            // Enable and disable the wanted buttons
+            // at the end of the sorting.
+            stopButton.setEnabled(false);
             startButton.setEnabled(true);
             shuffleButton.setEnabled(true);
+
         });
+        
+        // Stop the sorting if the stop button is pressed.
+        stopButton.addActionListener(e -> {
+            // Interrupt sortingThread.
+            sortingThread.interrupt();
+        });
+        
         sortingThread.start();
+    }
+
+    private void setupControlPanel() {
+
+        // Set up the control panel.
+        controlPanel.setLayout(new GridBagLayout());
+        controlPanel.setBackground(backgroundColor);
+        controlPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
+        /////////////////////////////////////////////////
+        // PANEL FOR THE MAIN BUTTONS OF THE PROGRAM. //
+        ///////////////////////////////////////////////
+        JPanel buttonPanel = new JPanel(new GridBagLayout());
+        buttonPanel.setBackground(backgroundColor);
+        
+        // Create a button that shuffles the list.
+        shuffleButton = new JButton("Shuffle");
+        shuffleButton.addActionListener(e -> {
+            visualizer.setValues(randomList(sizeSpinner.getValue().hashCode()));
+            visualizer.updateBars();
+        });
+        
+        // Create a button that starts the sorting.
+        startButton = new JButton("Start");
+        startButton.addActionListener(e -> {
+            sort();
+        });
+        
+        stopButton = new JButton("Stop");
+        settingsButton = new JButton("S");
+
+        settingsButton.addActionListener(e -> {
+            
+        });
+        
+        buttonPanel.add(startButton, createGridBagConstraints(0, 0, 1, 1, WEST));
+        buttonPanel.add(stopButton, createGridBagConstraints(1, 0, 1, 1, WEST));
+        buttonPanel.add(shuffleButton, createGridBagConstraints(0, 1, 2, 1, WEST));
+        buttonPanel.add(settingsButton, createGridBagConstraints(2, 1, 1, 1, WEST));
+        
+
+        /////////////////////////////////////////////////////////
+        // PANEL FOR CHANGING THE SPEED AND SIZE OF THE LIST. //
+        ///////////////////////////////////////////////////////
+        JPanel speedSizePanel = new JPanel(new GridBagLayout());
+        speedSizePanel.setBackground(backgroundColor);
+        
+        // Create a slider and spinner that can be used to
+        // change the size of the list.
+        sizeSlider = new JSlider(JSlider.HORIZONTAL, 0, 100, 10);
+        sizeSlider.setMajorTickSpacing(10);
+        sizeSlider.setMinorTickSpacing(5);
+        sizeSlider.setPaintTicks(true);
+        sizeSlider.setPaintLabels(true);
+
+        SpinnerModel sizeModel = new SpinnerNumberModel(10, 10, 1000, 10);
+        sizeSpinner = new JSpinner(sizeModel);
+        sizeSpinner.setPreferredSize(new Dimension(75, 25));
+
+        sizeSlider.addChangeListener(e -> {
+            int value = sizeSlider.getValue();
+            sizeSpinner.setValue(value);
+        });
+
+        sizeSpinner.addChangeListener(e -> {
+            int value = sizeSpinner.getValue().hashCode();
+            sizeSlider.setValue(value);
+        });
+        
+        // Create a slider and spinner that can be used to
+        // change the speed of the sorting.
+        speedSlider = new JSlider(JSlider.HORIZONTAL, 0, 50, 1);
+        speedSlider.setMajorTickSpacing(10);
+        speedSlider.setMinorTickSpacing(5);
+        speedSlider.setPaintTicks(true);
+        speedSlider.setPaintLabels(true);
+        
+        SpinnerModel speedModel = new SpinnerNumberModel(1, 0, 500, 10);
+        speedSpinner = new JSpinner(speedModel);
+        speedSpinner.setPreferredSize(new Dimension(75, 25));
+
+        speedSlider.addChangeListener(e -> {
+            int value = speedSlider.getValue();
+            Algorithms.setSpeed(value);
+            speedSpinner.setValue(value);
+        });
+        
+        speedSpinner.addChangeListener(e -> {
+            int value = speedSpinner.getValue().hashCode();
+            Algorithms.setSpeed(value);
+            speedSlider.setValue(value);
+        });
+
+        JPanel hSeparatorPanel = new JPanel(new GridBagLayout());
+        hSeparatorPanel.setBackground(backgroundColor);
+        hSeparatorPanel.setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 0));
+        hSeparatorPanel.add(new JSeparator(JSeparator.HORIZONTAL), createGridBagConstraints(0, 0, 1, 1, WEST));
+
+        speedSizePanel.add(new JLabel("SIZE SLIDER:"), createGridBagConstraints(0, 0, 1, 1, EAST));
+        speedSizePanel.add(sizeSlider, createGridBagConstraints(1, 0, 2, 1, WEST));
+
+        speedSizePanel.add(new JLabel("CUSTOM SIZE:"), createGridBagConstraints(0, 1, 1, 1, EAST));
+        speedSizePanel.add(sizeSpinner, createGridBagConstraints(1, 1, 1, 1, WEST));
+        
+        speedSizePanel.add(hSeparatorPanel, createGridBagConstraints(0, 2, 3, 1, WEST));
+        
+        speedSizePanel.add(new JLabel("SPEED SLIDER:"), createGridBagConstraints(0, 3, 1, 1, EAST));
+        speedSizePanel.add(speedSlider, createGridBagConstraints(1, 3, 2, 1, WEST));
+        
+        speedSizePanel.add(new JLabel("CUSTOM SPEED: "), createGridBagConstraints(0, 4, 1, 1, EAST));
+        speedSizePanel.add(speedSpinner, createGridBagConstraints(1, 4, 2, 1, WEST));
+
+        JPanel vSeparatorPanel = new JPanel(new GridBagLayout());
+        vSeparatorPanel.setBackground(backgroundColor);
+        vSeparatorPanel.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 5));
+        vSeparatorPanel.add(new JSeparator(JSeparator.VERTICAL), createGridBagConstraints(0, 0, 1, 1, WEST));
+
+        ///////////////////////////////////////////////
+        // ADD THE COMPONENTS TO THE CONTROL PANEL. //
+        /////////////////////////////////////////////
+        controlPanel.add(speedSizePanel, createGridBagConstraints(3, 0, 1, 3, WEST));
+        controlPanel.add(vSeparatorPanel, createGridBagConstraints(2, 0, 1, 3, WEST));
+        controlPanel.add(buttonPanel, createGridBagConstraints(0, 0, 1, 2, WEST));
+    }
+
+    private GridBagConstraints createGridBagConstraints(int x, int y, int gridWidth, int gridHeight, int anchor) {
+
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.gridx = x;
+        gbc.gridy = y;
+        gbc.gridwidth = gridWidth;
+        gbc.gridheight = gridHeight;
+        gbc.weightx = 1.0;
+        gbc.weighty = 1.0;
+        gbc.fill = GridBagConstraints.BOTH;
+        gbc.anchor = anchor;
+        return gbc;
     }
 }
