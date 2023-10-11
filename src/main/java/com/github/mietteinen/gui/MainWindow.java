@@ -66,23 +66,28 @@ public class MainWindow extends JFrame {
         gbcVisualizer.fill = GridBagConstraints.BOTH;
         mainPanel.add(visualizer, gbcVisualizer);
 
-        mainPanel.setBackground(Color.BLACK);
+        mainPanel.setBackground(Color.WHITE);
         controlPanel.setBackground(Color.GREEN);
+
+        SpinnerModel sizeModel = new SpinnerNumberModel(10, 10, 1000, 10);
+        JSpinner sizeSpinner = new JSpinner(sizeModel);
+        sizeSpinner.setPreferredSize(new Dimension(50, 25));
+        controlPanel.add(sizeSpinner);
 
         //Create a button in controlPanel to start the sorting.
         JButton startButton = new JButton("Start");
         startButton.addActionListener(e -> Algorithms.bubbleSort(visualizer));
         controlPanel.add(startButton);
-
+        
         //Create a button in controlPanel to shuffle the list.
         JButton shuffleButton = new JButton("Shuffle");
         shuffleButton.addActionListener(e -> {
-            visualizer.setValues(randomList(10));
+            visualizer.setValues(randomList(sizeSpinner.getValue().hashCode()));
             visualizer.updateBars();
         });
         controlPanel.add(shuffleButton);
 
-        //Algorithms.bubbleSort(visualizer);
+        
     }
 
     public void show() {

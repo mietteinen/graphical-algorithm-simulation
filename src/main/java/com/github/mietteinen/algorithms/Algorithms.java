@@ -19,57 +19,71 @@ public class Algorithms {
         ArrayList<ValueBar> bars = visualizer.getBars();
 
         int size = lst.size();
-        int temp = 0;
 
         for (int i = 0; i < size; i++) {
             for (int j = 1; j < (size - i); j++) {
                 
-                ValueBar currentBar = bars.get(j);
-                ValueBar previousBar = bars.get(j - 1);
+                ValueBar currentBar = bars.get(j - 1);
 
                 // Check if j-1 and j are valid indices for both lst and bars
                 if (j - 1 >= 0 && j < size) {
 
                     // Update the bars.
-                    //currentBar.setColor(Color.RED);
-                    //previousBar.setColor(Color.RED);
+                    currentBar.setColor(Color.RED);
 
-                    //visualizer.updateBars();
+                    visualizer.updateBars();
 
                     if (lst.get(j - 1) > lst.get(j)) {
-                        temp = lst.get(j - 1);
 
                         try {
-                            Thread.sleep(500);
+                            Thread.sleep(10);
                         } catch (InterruptedException e) {
                             System.out.println("Thread interrupted!");
                         }
 
                         visualizer.update(j - 1, j);
-                        //currentBar.drawOver(visualizer.getGraphics());
-                        //previousBar.drawOver(visualizer.getGraphics());
-                        //visualizer.updateBars();
+                        visualizer.updateBars();
                     }
 
-                    //visualizer.updateBars();
                 }
-                //System.out.println("Bar color: " + currentBar.getColor());
+
                 // Reset the colors
-                //currentBar.setColor(Color.WHITE);
-                //previousBar.setColor(Color.WHITE);
-                //System.out.println("Bar color: " + currentBar.getColor());
+                currentBar.setColor(Color.WHITE);
+                visualizer.updateBars();
             }
         }
-        //checkOrder(lst, bars);
+        checkOrder(visualizer);
     }
 
-    public static void checkOrder(ArrayList<Integer> lst, ArrayList<ValueBar> bars) {
+    public static void checkOrder(SortingVisualizer visualizer) {
 
-        for (int i = 0; i < lst.size() - 1; i++) {
-            if (lst.get(i) < lst.get(i + 1)) {
+        ArrayList<Integer> lst = visualizer.getValues();
+        ArrayList<ValueBar> bars = visualizer.getBars();
+
+        for (int i = 0; i < lst.size(); i++) {
+
+            // Check for the last item in the list.
+            if (i == lst.size() - 1) {
+                bars.get(i).setColor(Color.GREEN);
+                visualizer.updateBars();
+                break;
+            }
+
+            // Check if the current item is greater than the next item.
+            if (lst.get(i) > lst.get(i + 1)) {
+                bars.get(i).setColor(Color.RED);
+            } else {
                 bars.get(i).setColor(Color.GREEN);
             }
+
+            visualizer.updateBars();
+
+            // Wait 500 milliseconds to make the check easier to see.
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                System.out.println("Thread interrupted!");
+            }
         }
-        System.out.println("List is sorted!");
     }
 }

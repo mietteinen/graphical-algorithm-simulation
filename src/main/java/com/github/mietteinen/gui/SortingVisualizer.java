@@ -44,21 +44,27 @@ public class SortingVisualizer extends JPanel {
     }
 
     public void updateBars() {
-    
+
         int barWidth = (int) (this.getWidth() * 0.8) / values.size();
         int heightMultiplier = (int) (this.getHeight() * 0.8) / Collections.max(values);
         int xMidpoint = this.getWidth() / 2;
     
         // Update each bar.
         for (int i = 0; i < bars.size(); i++) {
+
             ValueBar bar = bars.get(i);
             int value = values.get(i);
+
             int barHeight = value * heightMultiplier;
             int yCoord = (this.getHeight() - barHeight) / 2;
             int xCoord = xMidpoint - (values.size() * barWidth) / 2 + i * barWidth;
+
             bar.update(value, xCoord, yCoord, barWidth, barHeight);
             bar.draw(this.getGraphics());
+
         }
+        // Required for the bars to be updated immediately.
+        this.paintImmediately(0, 0, this.getWidth(), this.getHeight());
     }
     
     public void update(int indexFrom, int indexTo) {
@@ -100,7 +106,7 @@ public class SortingVisualizer extends JPanel {
             ValueBar bar = new ValueBar(value, xCoord, yCoord, barWidth, barHeight, Color.WHITE);
             bars.add(bar);
         }
-        repaint();
+        this.repaint();
     }
 
     @Override

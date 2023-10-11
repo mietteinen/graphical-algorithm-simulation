@@ -32,17 +32,6 @@ public class ValueBar {
         g.drawRect(xCoord, yCoord, width, height);
     }
 
-    public void drawOver(Graphics g) {
-            
-            // Draw the bar.
-            g.setColor(Color.WHITE);
-            g.fillRect(xCoord, yCoord, width, height);
-    
-            // Outline the bar.
-            g.setColor(Color.WHITE);
-            g.drawRect(xCoord, yCoord, width, height);
-    }
-
     public void update(int value, int x, int y, int width, int height) {
         this.value = value;
         this.xCoord = x;
