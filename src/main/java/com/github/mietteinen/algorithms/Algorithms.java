@@ -12,6 +12,8 @@ public class Algorithms {
         BUBBLE_SORT
     }
 
+    private static int timeBetweenFrames;
+
     // Implement bubbleSort in a way that it can be used with the SortingVisualizer.
     public static void bubbleSort(SortingVisualizer visualizer) {
 
@@ -24,32 +26,30 @@ public class Algorithms {
             for (int j = 1; j < (size - i); j++) {
                 
                 ValueBar currentBar = bars.get(j - 1);
-
-                // Check if j-1 and j are valid indices for both lst and bars
-                if (j - 1 >= 0 && j < size) {
-
-                    // Update the bars.
-                    currentBar.setColor(Color.RED);
-
-                    visualizer.updateBars();
-
-                    if (lst.get(j - 1) > lst.get(j)) {
-
-                        try {
-                            Thread.sleep(10);
-                        } catch (InterruptedException e) {
-                            System.out.println("Thread interrupted!");
-                        }
-
-                        visualizer.update(j - 1, j);
-                        visualizer.updateBars();
-                    }
-
-                }
-
-                // Reset the colors
-                currentBar.setColor(Color.WHITE);
+                
+                // Update the bars.
+                currentBar.setColor(Color.RED);
                 visualizer.updateBars();
+                
+                try {
+                    Thread.sleep(timeBetweenFrames);
+                } catch (InterruptedException e) {
+                    System.out.println("Thread interrupted!");
+                }
+                
+                // Swap the values if the current value is greater than the next value.
+                if (j - 1 >= 0 && j < size) {
+                    
+                    if (lst.get(j - 1) > lst.get(j)) {
+                        
+                        visualizer.update(j - 1, j);
+                    }
+                    
+                }
+                
+                
+                // Reset the color.
+                currentBar.setColor(Color.WHITE);
             }
         }
         checkOrder(visualizer);
@@ -59,31 +59,44 @@ public class Algorithms {
 
         ArrayList<Integer> lst = visualizer.getValues();
         ArrayList<ValueBar> bars = visualizer.getBars();
+        ValueBar currentBar;
 
         for (int i = 0; i < lst.size(); i++) {
 
+            currentBar = bars.get(i);
+
             // Check for the last item in the list.
             if (i == lst.size() - 1) {
-                bars.get(i).setColor(Color.GREEN);
+                currentBar.setColor(Color.GREEN);
                 visualizer.updateBars();
                 break;
             }
 
             // Check if the current item is greater than the next item.
             if (lst.get(i) > lst.get(i + 1)) {
-                bars.get(i).setColor(Color.RED);
+                currentBar.setColor(Color.RED);
             } else {
-                bars.get(i).setColor(Color.GREEN);
+                currentBar.setColor(Color.GREEN);
             }
 
             visualizer.updateBars();
 
-            // Wait 500 milliseconds to make the check easier to see.
             try {
-                Thread.sleep(100);
+                Thread.sleep(timeBetweenFrames);
             } catch (InterruptedException e) {
                 System.out.println("Thread interrupted!");
             }
         }
+    }
+
+    public static void setSpeed(int framesPerSecond) {
+        
+        if (framesPerSecond == 0) {
+            timeBetweenFrames = 0;
+            return;
+        }
+
+        // Calculate the time between frames in milliseconds.
+        timeBetweenFrames = 1000 / framesPerSecond;
     }
 }

@@ -27,14 +27,6 @@ public class ValueBar extends JComponent {
 
     public void draw(Graphics g) {
 
-        // Draw the bar.
-        // g.setColor(color);
-        // g.fillRect(xCoord, yCoord, width, height);
-
-        // Outline the bar.
-        // g.setColor(Color.BLACK);
-        // g.drawRect(xCoord, yCoord, width, height);
-
         Graphics2D g2d = (Graphics2D) g.create();
 
         // Set the color and shape of the bar.

@@ -16,6 +16,8 @@ public class MainWindow extends JFrame {
     private JFrame window;
     private JPanel mainPanel;
     private JPanel controlPanel;
+    private JButton startButton;
+    private JButton shuffleButton;
     private SortingVisualizer visualizer;
     private Color backgroundColor;
     private Color foregroundColor;
@@ -39,14 +41,7 @@ public class MainWindow extends JFrame {
         mainPanel = new JPanel(new GridBagLayout());
         controlPanel = new JPanel(new GridBagLayout());
         
-        // Make the main panel take up 80% of the window's height.
-        mainPanel.setPreferredSize(new Dimension(window.getWidth(), 
-                                          (int) (window.getHeight() * 0.8)));
-        
-        // Make the control panel take up the rest of the window's height.
-        controlPanel.setPreferredSize(new Dimension(window.getWidth(), 
-                                             (int) (window.getHeight()
-                                               - mainPanel.getHeight())));
+        updatePanelHeight();
 
         // Add the panels to the window.
         window.add(mainPanel, BorderLayout.NORTH);
@@ -80,20 +75,33 @@ public class MainWindow extends JFrame {
         sizeSpinner.setPreferredSize(new Dimension(75, 25));
         controlPanel.add(sizeSpinner);
 
-        //Create a button in controlPanel to start the sorting.
-        JButton startButton = new JButton("Start");
-        startButton.addActionListener(e -> Algorithms.bubbleSort(visualizer));
-        controlPanel.add(startButton);
-        
         //Create a button in controlPanel to shuffle the list.
-        JButton shuffleButton = new JButton("Shuffle");
+        shuffleButton = new JButton("Shuffle");
         shuffleButton.addActionListener(e -> {
             visualizer.setValues(randomList(sizeSpinner.getValue().hashCode()));
             visualizer.updateBars();
         });
+        
+        //Create a button in controlPanel to start the sorting.
+        startButton = new JButton("Start");
+        startButton.addActionListener(e -> {
+            sort();
+        });
+
+        controlPanel.add(startButton);
         controlPanel.add(shuffleButton);
 
-        
+        // Create a slider in controlPanel to change the speed of the sorting.
+        JSlider speedSlider = new JSlider(JSlider.HORIZONTAL, 0, 50, 1);
+        speedSlider.setMajorTickSpacing(10);
+        speedSlider.setMinorTickSpacing(1);
+        speedSlider.setPaintTicks(true);
+        speedSlider.setPaintLabels(true);
+        speedSlider.addChangeListener(e -> Algorithms.setSpeed(speedSlider.getValue()));
+        controlPanel.add(speedSlider);
+
+        Algorithms.setSpeed(speedSlider.getValue());
+
     }
 
     public void show() {
@@ -123,5 +131,16 @@ public class MainWindow extends JFrame {
         }
 
         return list;
+    }
+
+    private void sort() {
+        Thread sortingThread = new Thread(() -> {
+            shuffleButton.setEnabled(false);
+            startButton.setEnabled(false);
+            Algorithms.bubbleSort(visualizer);
+            startButton.setEnabled(true);
+            shuffleButton.setEnabled(true);
+        });
+        sortingThread.start();
     }
 }
