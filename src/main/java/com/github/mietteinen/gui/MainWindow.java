@@ -2,6 +2,7 @@ package com.github.mietteinen.gui;
 
 import javax.swing.*;
 
+import com.github.mietteinen.gui.SettingsWindow;
 import com.github.mietteinen.algorithms.Algorithms;
 import com.github.mietteinen.utilities.ThemeUtils;
 
@@ -20,6 +21,7 @@ public class MainWindow extends JFrame {
     private JFrame window;
     private JPanel mainPanel;
     private JPanel controlPanel;
+    private SettingsWindow settingsWindow;
     
     // All buttons.
     private JButton startButton;
@@ -186,7 +188,11 @@ public class MainWindow extends JFrame {
         settingsButton = new JButton("S");
 
         settingsButton.addActionListener(e -> {
-            
+            if (settingsWindow != null) {
+                settingsWindow.dispose();
+            } else {
+                settingsWindow = new SettingsWindow(this);
+            }
         });
         
         buttonPanel.add(startButton, createGridBagConstraints(0, 0, 1, 1, WEST));
@@ -279,7 +285,7 @@ public class MainWindow extends JFrame {
         controlPanel.add(buttonPanel, createGridBagConstraints(0, 0, 1, 2, WEST));
     }
 
-    private GridBagConstraints createGridBagConstraints(int x, int y, int gridWidth, int gridHeight, int anchor) {
+    protected GridBagConstraints createGridBagConstraints(int x, int y, int gridWidth, int gridHeight, int anchor) {
 
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridx = x;

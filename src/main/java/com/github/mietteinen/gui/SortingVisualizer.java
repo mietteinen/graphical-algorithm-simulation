@@ -82,6 +82,8 @@ public class SortingVisualizer extends JPanel {
         values.remove(indexFrom);
         values.add(indexTo, value);
         
+        // Calculate the x coordinate of the bar
+        // and store it in the bar object.
         bar.move(this.getWidth() / 2 - (values.size() * bar.getWidth()) / 2 + indexTo * bar.getWidth());
         bars.remove(indexFrom);
         bars.add(indexTo, bar);
@@ -89,6 +91,9 @@ public class SortingVisualizer extends JPanel {
         updateBars();
     }
     
+    /**
+     * Create the bars that represent the values in the list.
+     */
     private void createBars() {
         
         int barWidth = (int) (this.getWidth() * 0.8) / values.size();
@@ -113,7 +118,7 @@ public class SortingVisualizer extends JPanel {
             ValueBar bar = new ValueBar(value, xCoord, yCoord, barWidth, barHeight, Color.WHITE);
             bars.add(bar);
         }
-        this.repaint();
+        //this.repaint();
     }
 
     @Override
