@@ -71,8 +71,6 @@ public class SortingVisualizer extends JPanel {
             int xCoord = xMidpoint - (values.size() * barWidth) / 2 + i * barWidth;
 
             bar.update(value, xCoord, yCoord, barWidth, barHeight);
-            bar.repaint();
-
         }
         // Required for the bars to be updated immediately.
         this.paintImmediately(0, 0, this.getWidth(), this.getHeight());
@@ -129,7 +127,6 @@ public class SortingVisualizer extends JPanel {
             ValueBar bar = new ValueBar(value, xCoord, yCoord, barWidth, barHeight, Color.WHITE);
             bars.add(bar);
         }
-        //this.repaint();
     }
 
     @Override
@@ -143,6 +140,5 @@ public class SortingVisualizer extends JPanel {
 
         for (ValueBar bar : bars)
             bar.draw(g);
-        
     }
 }

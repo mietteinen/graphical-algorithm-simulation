@@ -17,6 +17,7 @@ public class Algorithms {
     static {
         algorithms = new DefaultComboBoxModel<String>();
         algorithms.addElement("Bubble Sort");
+        algorithms.addElement("Selection Sort");
     }
 
     /**
@@ -76,6 +77,89 @@ public class Algorithms {
         checkOrder(visualizer);
     }
 
+    /**
+     * Sorts the values using the selection sort algorithm. Updates
+     * the bars after each iteration, changing the color of the
+     * bars that are being compared.
+     * @param visualizer: The SortingVisualizer object that contains
+     *     the values and the bars.
+     */
+    public static void selectionSort(SortingVisualizer visualizer) {
+
+        ArrayList<Integer> lst = visualizer.getValues();
+        ArrayList<ValueBar> bars = visualizer.getBars();
+
+        int size = lst.size();
+
+        for (int i = 0; i < size - 1; i++) {
+
+            int minIndex = i;
+
+            ValueBar currentSmallestBar = bars.get(minIndex);
+            
+            for (int j = i + 1; j < size; j++) {
+                
+                ValueBar currentCompareBar = bars.get(j);
+                
+                currentSmallestBar.setColor(Color.RED);
+                currentCompareBar.setColor(Color.LIGHT_GRAY);
+                visualizer.updateBars();
+                
+                try {
+                    
+                    Thread.sleep(timeBetweenFrames / 2);
+                    
+                } catch (InterruptedException e) {
+                    
+                    System.out.println("Thread interrupted!");
+                    
+                    // Reset the color of the bars.
+                    for (ValueBar bar : visualizer.getBars()) {
+                        bar.setColor(Color.WHITE);
+                    }
+                    visualizer.updateBars();
+                    
+                    return;
+                }
+
+                if (lst.get(j) < lst.get(minIndex)) {
+                    minIndex = j;
+                    
+                    currentSmallestBar.setColor(Color.WHITE);
+                    currentSmallestBar = bars.get(minIndex);
+                    currentSmallestBar.setColor(Color.RED);
+                }
+                currentCompareBar.setColor(Color.WHITE);
+            }
+
+            bars.get(i).setColor(Color.RED);
+            visualizer.updateBars();
+            try {
+                
+                Thread.sleep(timeBetweenFrames / 2);
+                
+            } catch (InterruptedException e) {
+                
+                System.out.println("Thread interrupted!");
+                
+                // Reset the color of the bars.
+                for (ValueBar bar : visualizer.getBars()) {
+                    bar.setColor(Color.WHITE);
+                }
+                visualizer.updateBars();
+                
+                return;
+            }
+            visualizer.update(minIndex, i);
+
+
+            currentSmallestBar.setColor(Color.YELLOW);
+        }
+        bars.get(size - 1).setColor(Color.YELLOW);
+        visualizer.updateBars();
+        checkOrder(visualizer);
+    }
+    
     /**
      * Checks if the values are in order. Updates the bars
      * after each iteration, changing the color of the bars

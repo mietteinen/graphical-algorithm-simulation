@@ -160,6 +160,10 @@ public class MainWindow extends JFrame {
                     Algorithms.bubbleSort(visualizer);
                     break;
 
+                case "Selection Sort":
+                    Algorithms.selectionSort(visualizer);
+                    break;
+
                 default:
                     break;
             }
