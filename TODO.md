@@ -4,9 +4,9 @@
 	- [x] Accessed through settingsButton
 	- [x] Most likely a separate window
 	- [ ] **Consider a setting that changes whether buttons are labelled via icons or names**
-	- [ ] A dark-light mode setting
+	- [x] A dark-light mode setting
 	- [ ] **IMPLEMENT LOADING FROM AND SAVING TO JSON**
 
 - **More algorithms**
 	- [ ] QuickSort
-	- [ ] MergeSort
+	- [x] MergeSort
