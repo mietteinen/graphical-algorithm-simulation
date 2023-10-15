@@ -2,6 +2,8 @@ package com.github.mietteinen.gui;
 
 import javax.swing.*;
 
+import com.formdev.flatlaf.FlatDarculaLaf;
+import com.formdev.flatlaf.FlatLightLaf;
 import com.github.mietteinen.algorithms.Algorithms;
 import com.github.mietteinen.utilities.ThemeUtils;
 
@@ -137,6 +139,31 @@ public class MainWindow extends JFrame {
         }
 
         return list;
+    }
+
+    /**
+     * Sets the look and feel of the program to either
+     * light or dark.
+     * @param light: True if the light theme should be used.
+     */
+    public void setLightMode(boolean light) {
+
+        LookAndFeel newLookAndFeel;
+
+        if (light) {
+            newLookAndFeel = new FlatLightLaf();
+        } else {
+            newLookAndFeel = new FlatDarculaLaf();
+        }
+
+        try {
+            UIManager.setLookAndFeel(newLookAndFeel);
+        } catch (Exception e) {
+            System.out.println("Could not set system look and feel.");
+        }
+
+        SwingUtilities.updateComponentTreeUI(window);
+        SwingUtilities.updateComponentTreeUI(settingsWindow);
     }
 
     /**

@@ -7,6 +7,7 @@ import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JTextPane;
 import javax.swing.JComboBox;
+import javax.swing.JCheckBox;
 import javax.swing.border.Border;
 import javax.swing.BorderFactory;
 import javax.swing.DefaultComboBoxModel;
@@ -17,7 +18,7 @@ import java.awt.GridBagConstraints;
 
 public class SettingsWindow extends JDialog {
     
-    //private MainWindow parent;
+    private MainWindow parent;
     private JPanel mainPanel;
     private JPanel saveLoadPanel;
 
@@ -36,7 +37,7 @@ public class SettingsWindow extends JDialog {
 
         super(parent, "Simulation Settings", true);
 
-        //this.parent = parent;
+        this.parent = parent;
         this.algorithms = Algorithms.getAlgorithms();
         this.mainBorders = BorderFactory.createEmptyBorder(0, 5, 0, 5);
         
@@ -83,7 +84,7 @@ public class SettingsWindow extends JDialog {
         mainPanel.setPreferredSize(new Dimension(getWidth(), (int) (getHeight() * 0.9)));
         mainPanel.setBorder(mainBorders);
 
-        // Add a label "Sorting algorithm:" to the main panel.
+        // Add the sorting algorithm picker.
         mTextPane sortingAlgorithmLabel = new mTextPane();
         sortingAlgorithmLabel.setText("Sorting algorithm:");
         mainPanel.add(sortingAlgorithmLabel, createSettingGridBagConstraints(0, 0, 1, 1, GridBagConstraints.NORTHEAST));
@@ -91,6 +92,23 @@ public class SettingsWindow extends JDialog {
         algorithmComboBox = new JComboBox<String>();
         algorithmComboBox.setModel(algorithms);
         mainPanel.add(algorithmComboBox, createSettingGridBagConstraints(1, 0, 1, 1, GridBagConstraints.NORTH));
+
+        // Add the light mode checkbox.
+        mTextPane lightModeLabel = new mTextPane();
+        lightModeLabel.setText("Light mode:");
+        mainPanel.add(lightModeLabel, createSettingGridBagConstraints(0, 1, 1, 1, GridBagConstraints.NORTHEAST));
+
+        JCheckBox lightModeCheckBox = new JCheckBox();
+        
+        // React to the change of the checkbox.
+        lightModeCheckBox.addActionListener(e -> {
+            if (lightModeCheckBox.isSelected()) {
+                parent.setLightMode(true);
+            } else {
+                parent.setLightMode(false);
+            }
+        });
+        mainPanel.add(lightModeCheckBox, createSettingGridBagConstraints(1, 1, 1, 1, GridBagConstraints.NORTH));
     }
     
     /**
