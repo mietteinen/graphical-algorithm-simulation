@@ -6,11 +6,26 @@ import com.github.mietteinen.gui.ValueBar;
 import java.awt.Color;
 import java.util.ArrayList;
 
+import javax.swing.DefaultComboBoxModel;
+
 public class Algorithms {
 
+    private static DefaultComboBoxModel<String> algorithms;
     private static int timeBetweenFrames;
 
-    // Implement bubbleSort in a way that it can be used with the SortingVisualizer.
+    // Statically initialize the algorithms list.
+    static {
+        algorithms = new DefaultComboBoxModel<String>();
+        algorithms.addElement("Bubble Sort");
+    }
+
+    /**
+     * Sorts the values using the bubble sort algorithm. Updates
+     * the bars after each iteration, changing the color of the
+     * bars that are being compared.
+     * @param visualizer: The SortingVisualizer object that contains
+     *      the values and the bars.
+     */
     public static void bubbleSort(SortingVisualizer visualizer) {
 
         ArrayList<Integer> lst = visualizer.getValues();
@@ -61,6 +76,13 @@ public class Algorithms {
         checkOrder(visualizer);
     }
 
+    /**
+     * Checks if the values are in order. Updates the bars
+     * after each iteration, changing the color of the bars
+     * that are being checked currently.
+     * @param visualizer: The SortingVisualizer object that contains
+     *     the values and the bars.
+     */
     public static void checkOrder(SortingVisualizer visualizer) {
 
         ArrayList<Integer> lst = visualizer.getValues();
@@ -104,5 +126,9 @@ public class Algorithms {
 
         // Calculate the time between frames in milliseconds.
         timeBetweenFrames = 1000 / framesPerSecond;
+    }
+
+    public static DefaultComboBoxModel<String> getAlgorithms() {
+        return algorithms;
     }
 }

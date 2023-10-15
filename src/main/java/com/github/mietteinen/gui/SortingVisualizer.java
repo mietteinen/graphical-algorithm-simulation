@@ -16,14 +16,14 @@ public class SortingVisualizer extends JPanel {
     private JPanel mainPanel;
     private ArrayList<Integer> values;
     private ArrayList<ValueBar> bars;
-    private Color backgroundColor;
+    //private Color backgroundColor;
     private Color foregroundColor;
 
     public SortingVisualizer(JPanel mainPanel, ArrayList<Integer> values) {
         this.mainPanel = mainPanel;
         this.values = values;
         this.bars = new ArrayList<ValueBar>();
-        this.backgroundColor = ThemeUtils.getBackgroundColor();
+        //this.backgroundColor = ThemeUtils.getBackgroundColor();
         this.foregroundColor = ThemeUtils.getForegroundColor();
 
         createBars();
@@ -50,6 +50,10 @@ public class SortingVisualizer extends JPanel {
         createBars();
     }
 
+    /**
+     * Update the bars on the screen. This method should 
+     * be called after the values have been changed.
+     */
     public void updateBars() {
 
         int barWidth = (int) (this.getWidth() * 0.8) / values.size();
@@ -74,7 +78,14 @@ public class SortingVisualizer extends JPanel {
         this.paintImmediately(0, 0, this.getWidth(), this.getHeight());
     }
     
+    /**
+     * Update the values and the bars. Calls the updateBars() method
+     * to update the bars on-screen.
+     * @param indexFrom: The index of the value to be moved.
+     * @param indexTo: The index where the value should be moved.
+     */
     public void update(int indexFrom, int indexTo) {
+
         // Move one value to a different index.
         int value = values.get(indexFrom);
         ValueBar bar = bars.get(indexFrom);

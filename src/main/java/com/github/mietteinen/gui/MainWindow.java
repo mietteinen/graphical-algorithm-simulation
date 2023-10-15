@@ -2,7 +2,6 @@ package com.github.mietteinen.gui;
 
 import javax.swing.*;
 
-import com.github.mietteinen.gui.SettingsWindow;
 import com.github.mietteinen.algorithms.Algorithms;
 import com.github.mietteinen.utilities.ThemeUtils;
 
@@ -95,6 +94,8 @@ public class MainWindow extends JFrame {
 
         mainPanel.setBackground(foregroundColor);
 
+        settingsWindow = new SettingsWindow(this);
+
         setupControlPanel();
 
         Algorithms.setSpeed(speedSlider.getValue());
@@ -105,6 +106,9 @@ public class MainWindow extends JFrame {
         window.setVisible(true);
     }
 
+    /**
+     * Updates the height of the main and control panels.
+     */
     public void updatePanelHeight() {
 
         int newMainPanelHeight = (int) (window.getHeight() * 0.7);
@@ -118,6 +122,11 @@ public class MainWindow extends JFrame {
         }
     }
 
+    /**
+     * Creates a list of random integers.
+     * @param size: The size of the list as Integer.
+     * @return: The list of random integers as ArrayList.
+     */
     public ArrayList<Integer> randomList(int size) {
 
         ArrayList<Integer> list = new ArrayList<Integer>();
@@ -130,7 +139,13 @@ public class MainWindow extends JFrame {
         return list;
     }
 
-    private void sort() {
+    /**
+     * Sorts the list using the selected algorithm. Sorting
+     * is done on a separate thread so the other one can be
+     * used to access the GUI.
+     * @param algorithm: The algorithm to be used as String.
+     */
+    private void sort(String algorithm) {
         Thread sortingThread = new Thread(() -> {
 
             // Enable and disable the wanted buttons
@@ -139,7 +154,15 @@ public class MainWindow extends JFrame {
             startButton.setEnabled(false);
             stopButton.setEnabled(true);
 
-            Algorithms.bubbleSort(visualizer);
+            switch (algorithm) {
+
+                case "Bubble Sort":
+                    Algorithms.bubbleSort(visualizer);
+                    break;
+
+                default:
+                    break;
+            }
 
             // Enable and disable the wanted buttons
             // at the end of the sorting.
@@ -158,6 +181,10 @@ public class MainWindow extends JFrame {
         sortingThread.start();
     }
 
+    /**
+     * Sets up the control panel. Adds all the components
+     * to the panel.
+     */
     private void setupControlPanel() {
 
         // Set up the control panel.
@@ -181,18 +208,14 @@ public class MainWindow extends JFrame {
         // Create a button that starts the sorting.
         startButton = new JButton("Start");
         startButton.addActionListener(e -> {
-            sort();
+            sort(settingsWindow.getSelectedAlgorithm());
         });
         
         stopButton = new JButton("Stop");
-        settingsButton = new JButton("S");
+        settingsButton = new JButton("Settings");
 
         settingsButton.addActionListener(e -> {
-            if (settingsWindow != null) {
-                settingsWindow.dispose();
-            } else {
-                settingsWindow = new SettingsWindow(this);
-            }
+            settingsWindow.open();
         });
         
         buttonPanel.add(startButton, createGridBagConstraints(0, 0, 1, 1, WEST));
@@ -285,6 +308,17 @@ public class MainWindow extends JFrame {
         controlPanel.add(buttonPanel, createGridBagConstraints(0, 0, 1, 2, WEST));
     }
 
+    /**
+     * Creates a GridBagConstraints object with the given
+     * parameters. The fill is set to BOTH and the weight
+     * is set to 1.0.
+     * @param x: The x coordinate of the component.
+     * @param y: The y coordinate of the component.
+     * @param gridWidth: The width of the component.
+     * @param gridHeight: The height of the component.
+     * @param anchor: The anchor of the component.
+     * @return: The GridBagConstraints object.
+     */
     protected GridBagConstraints createGridBagConstraints(int x, int y, int gridWidth, int gridHeight, int anchor) {
 
         GridBagConstraints gbc = new GridBagConstraints();
