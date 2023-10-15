@@ -82,6 +82,10 @@ public class ValueBar extends JComponent {
         return color;
     }
 
+    public void setValue(int value) {
+        this.value = value;
+    }
+
     public void setColor(Color color) {
         this.color = color;
     }

@@ -164,6 +164,10 @@ public class MainWindow extends JFrame {
                     Algorithms.selectionSort(visualizer);
                     break;
 
+                case "Merge Sort":
+                    Algorithms.mergeSortMain(visualizer);
+                    break;
+
                 default:
                     break;
             }
