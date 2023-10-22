@@ -18,3 +18,4 @@ buildNumber.properties
 
 # OWN
 .vscode
+settings.json
