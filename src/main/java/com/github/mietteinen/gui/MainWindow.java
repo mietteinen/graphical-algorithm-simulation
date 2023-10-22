@@ -69,22 +69,22 @@ public class MainWindow extends JFrame {
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         window.setLocationRelativeTo(null);
         window.setLayout(new BoxLayout(window.getContentPane(), BoxLayout.Y_AXIS));
-
+        
         mainPanel = new JPanel(new GridBagLayout());
         controlPanel = new JPanel(new GridBagLayout());
         
         updatePanelHeight();
-
+        
         // Add the panels to the window.
         window.add(mainPanel, BorderLayout.NORTH);
         window.add(controlPanel, BorderLayout.SOUTH);
-
+        
         // Add a component listener to the window to update the panel height.
         window.addComponentListener(new ComponentAdapter() {
             public void componentResized(ComponentEvent e) {
-
+                
                 updatePanelHeight();
-
+                
                 // Hide the labels of the sliders if the window is too small.
                 if (window.getWidth() < 1150 && window.getHeight() < 575) {
                     sizeSlider.setPaintLabels(false);
@@ -96,8 +96,9 @@ public class MainWindow extends JFrame {
             }
         });
         
-        visualizer = new SortingVisualizer(mainPanel, randomList(10));
-
+        settingsWindow = new SettingsWindow(this);
+        visualizer = new SortingVisualizer(mainPanel, randomList(10), settingsWindow.getMainSettingsInstance());
+        
         // Set the constraints for the visualizer and add it to mainPanel.
         gbcVisualizer = new GridBagConstraints();
         gbcVisualizer.gridx = 0;
@@ -109,7 +110,6 @@ public class MainWindow extends JFrame {
 
         mainPanel.setBackground(foregroundColor);
 
-        settingsWindow = new SettingsWindow(this);
         setLightMode(settingsWindow.getLightMode());
         
         setupControlPanel();
@@ -180,8 +180,7 @@ public class MainWindow extends JFrame {
             System.out.println("Could not set system look and feel.");
         }
 
-        SwingUtilities.updateComponentTreeUI(window);
-        settingsWindow.updateTheme();
+        refreshUI();
     }
 
     /**
@@ -359,5 +358,14 @@ public class MainWindow extends JFrame {
         controlPanel.add(speedSizePanel, createGridBagConstraints(3, 0, 1, 3, WEST));
         controlPanel.add(vSeparatorPanel, createGridBagConstraints(2, 0, 1, 3, WEST));
         controlPanel.add(buttonPanel, createGridBagConstraints(0, 0, 1, 2, WEST));
+    }
+
+    /**
+     * Refreshes the UI of the program.
+     */
+    protected void refreshUI() {
+        SwingUtilities.updateComponentTreeUI(window);
+        settingsWindow.updateTheme();
+        visualizer.updateBars();
     }
 }

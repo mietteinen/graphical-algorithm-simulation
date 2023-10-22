@@ -58,6 +58,7 @@ public class SettingsWindow extends JDialog {
     
     private JComboBox<String> algorithmComboBox;
     private JCheckBox lightModeCheckBox; 
+    private JCheckBox drawOutlineCheckBox;
 
     private Border mainBorders;
     
@@ -82,7 +83,9 @@ public class SettingsWindow extends JDialog {
         setupInfoTextArea();
 
         // Create the settings panel struct.
-        this.settings = new Settings(algorithmComboBox.getSelectedItem().toString(), lightModeCheckBox.isSelected());
+        this.settings = new Settings(algorithmComboBox.getSelectedItem().toString(), 
+                                lightModeCheckBox.isSelected(),
+                                drawOutlineCheckBox.isSelected());
         
         // Load the settings from a settings.json file.
         loadFromJSON();
@@ -108,6 +111,10 @@ public class SettingsWindow extends JDialog {
 
     public boolean getLightMode() {
         return lightModeCheckBox.isSelected();
+    }
+
+    public Settings getMainSettingsInstance() {
+        return this.settings;
     }
 
     public void updateTheme() {
@@ -154,6 +161,20 @@ public class SettingsWindow extends JDialog {
             }
         });
         mainPanel.add(lightModeCheckBox, createSettingGridBagConstraints(1, 1, 1, 1, GridBagConstraints.NORTH));
+
+        // Add the draw outline checkbox.
+        mTextPane drawOutlineLabel = new mTextPane(true);
+        drawOutlineLabel.setText("Draw outline:");
+        mainPanel.add(drawOutlineLabel, createSettingGridBagConstraints(0, 2, 1, 1, GridBagConstraints.NORTHEAST));
+
+        drawOutlineCheckBox = new JCheckBox();
+
+        // React to the change of the checkbox.
+        drawOutlineCheckBox.addActionListener(e -> {
+            settings.setDrawOutline(drawOutlineCheckBox.isSelected());
+            parent.refreshUI();
+        });
+        mainPanel.add(drawOutlineCheckBox, createSettingGridBagConstraints(1, 2, 1, 1, GridBagConstraints.NORTH));
     }
     
     /**
@@ -226,6 +247,7 @@ public class SettingsWindow extends JDialog {
         // Update the settings struct.
         settings.setAlgorithm(algorithmComboBox.getSelectedItem().toString());
         settings.setLightMode(lightModeCheckBox.isSelected());
+        settings.setDrawOutline(drawOutlineCheckBox.isSelected());
         
         try {
             Gson gson = new GsonBuilder().setPrettyPrinting().create();
@@ -257,13 +279,10 @@ public class SettingsWindow extends JDialog {
                 Settings loadedSettings = gson.fromJson(reader, Settings.class);
 
                 // Update your current settings with the loaded settings
-                this.settings = loadedSettings;
-                System.out.println("Selected 1: " + algorithmComboBox.getSelectedItem());
+                settings = loadedSettings;
                 applySettings();
                 
-                System.out.println("Settings actually loaded.");
                 infoTextArea.setText("Settings loaded successfully.");
-
                 reader.close();
                 
             } catch (IOException e) {
@@ -294,12 +313,9 @@ public class SettingsWindow extends JDialog {
         SwingUtilities.invokeLater(() -> {
 
             lightModeCheckBox.setSelected(settings.getLightMode());
+            //drawOutlineCheckBox.setSelected(settings.getDrawOutline());
 
-            if (settings.getLightMode()) {
-                parent.setLightMode(true);
-            } else {
-                parent.setLightMode(false);
-            }
+            parent.setLightMode(settings.getLightMode()); // Calls refreshUI() on the parent window.
         });
     }
     

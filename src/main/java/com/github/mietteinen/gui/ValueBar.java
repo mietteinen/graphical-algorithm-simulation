@@ -24,14 +24,16 @@ public class ValueBar extends JComponent {
     private int width;
     private int height;
     private Color color;
+    private Boolean drawOutline;
 
-    public ValueBar(int value, int x, int y, int width, int height, Color color) {
+    public ValueBar(int value, int x, int y, int width, int height, Color color, Boolean drawOutline) {
         this.value = value;
         this.xCoord = x;
         this.yCoord = y;
         this.width = width;
         this.height = height;
         this.color = color;
+        this.drawOutline = drawOutline;
     }
 
     /**
@@ -50,9 +52,11 @@ public class ValueBar extends JComponent {
         // Draw the bar.
         g2d.fill(bar);
 
-        // Outline the bar.
-        g2d.setColor(Color.BLACK);
-        g2d.draw(bar);
+        // Outline the bar if its width is more than 2 pixels.
+        if (width > 1 && drawOutline) {
+            g2d.setColor(Color.BLACK);
+            g2d.draw(bar);
+        }
     }
 
     /**
@@ -63,12 +67,13 @@ public class ValueBar extends JComponent {
      * @param width: The new width of the bar.
      * @param height: The new height of the bar.
      */
-    public void update(int value, int x, int y, int width, int height) {
+    public void update(int value, int x, int y, int width, int height, Boolean outline) {
         this.value = value;
         this.xCoord = x;
         this.yCoord = y;
         this.width = width;
         this.height = height;
+        this.drawOutline = outline;
     }
 
     /**

@@ -12,6 +12,7 @@ package com.github.mietteinen.gui;
 
 import javax.swing.JPanel;
 
+import com.github.mietteinen.utilities.Settings;
 import com.github.mietteinen.utilities.ThemeUtils;
 
 import java.awt.Graphics;
@@ -24,13 +25,15 @@ import java.util.ArrayList;
 public class SortingVisualizer extends JPanel {
     
     private JPanel mainPanel;
+    private Settings settings;
     private ArrayList<Integer> values;
     private ArrayList<ValueBar> bars;
     //private Color backgroundColor;
     private Color foregroundColor;
 
-    public SortingVisualizer(JPanel mainPanel, ArrayList<Integer> values) {
+    public SortingVisualizer(JPanel mainPanel, ArrayList<Integer> values, Settings settings) {
         this.mainPanel = mainPanel;
+        this.settings = settings;
         this.values = values;
         this.bars = new ArrayList<ValueBar>();
         //this.backgroundColor = ThemeUtils.getBackgroundColor();
@@ -80,7 +83,7 @@ public class SortingVisualizer extends JPanel {
             int yCoord = (this.getHeight() - barHeight) / 2;
             int xCoord = xMidpoint - (values.size() * barWidth) / 2 + i * barWidth;
 
-            bar.update(value, xCoord, yCoord, barWidth, barHeight);
+            bar.update(value, xCoord, yCoord, barWidth, barHeight, settings.getDrawOutline());
         }
         // Required for the bars to be updated immediately.
         this.paintImmediately(0, 0, this.getWidth(), this.getHeight());
@@ -134,7 +137,7 @@ public class SortingVisualizer extends JPanel {
             int xCoord = xMidpoint - (values.size() * barWidth) / 2 + i * barWidth;
             
             // Create a new ValueBar object and draw it.
-            ValueBar bar = new ValueBar(value, xCoord, yCoord, barWidth, barHeight, Color.WHITE);
+            ValueBar bar = new ValueBar(value, xCoord, yCoord, barWidth, barHeight, Color.WHITE, settings.getDrawOutline());
             bars.add(bar);
         }
     }
