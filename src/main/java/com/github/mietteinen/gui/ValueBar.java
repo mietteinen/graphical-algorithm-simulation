@@ -1,3 +1,12 @@
+/**
+ * Filename:    ValueBar.java
+ * Author:      Tomi Miettinen
+ * Date:        10/2023
+ * Description: This class represents a single number of a list
+ *              as a custom-made, rounded rectangle. The height
+ *              of the bar is derived from the value.
+ */
+
 package com.github.mietteinen.gui;
 
 import java.awt.Color;
@@ -25,6 +34,11 @@ public class ValueBar extends JComponent {
         this.color = color;
     }
 
+    /**
+     * Draw the bars that represent numbers
+     * in a list.
+     * @param g: Graphics object.
+     */
     public void draw(Graphics g) {
 
         Graphics2D g2d = (Graphics2D) g.create();
@@ -41,6 +55,14 @@ public class ValueBar extends JComponent {
         g2d.draw(bar);
     }
 
+    /**
+     * Update the bar's value, x and y coordinates, width and height.
+     * @param value: The new value of the bar.
+     * @param x: The new x coordinate of the bar.
+     * @param y: The new y coordinate of the bar.
+     * @param width: The new width of the bar.
+     * @param height: The new height of the bar.
+     */
     public void update(int value, int x, int y, int width, int height) {
         this.value = value;
         this.xCoord = x;
@@ -49,6 +71,10 @@ public class ValueBar extends JComponent {
         this.height = height;
     }
 
+    /**
+     * Update the bar's x coordinate.
+     * @param x: The new x coordinate of the bar.
+     */
     public void move(int x) {
         this.xCoord = x;
     }
@@ -63,6 +89,10 @@ public class ValueBar extends JComponent {
 
     public Color getColor() {
         return color;
+    }
+
+    public void setValue(int value) {
+        this.value = value;
     }
 
     public void setColor(Color color) {

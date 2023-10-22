@@ -1,3 +1,13 @@
+/**
+ * Filename:    SortingVisualizer.java
+ * Author:      Tomi Miettinen
+ * Date:        10/2023
+ * Description: The visualization of sorting algorithms
+ *              is done through this class. It contains
+ *              logic to draw ValueBars on the screen
+ *              and to update them when the values change.
+ */
+
 package com.github.mietteinen.gui;
 
 import javax.swing.JPanel;
@@ -16,14 +26,14 @@ public class SortingVisualizer extends JPanel {
     private JPanel mainPanel;
     private ArrayList<Integer> values;
     private ArrayList<ValueBar> bars;
-    private Color backgroundColor;
+    //private Color backgroundColor;
     private Color foregroundColor;
 
     public SortingVisualizer(JPanel mainPanel, ArrayList<Integer> values) {
         this.mainPanel = mainPanel;
         this.values = values;
         this.bars = new ArrayList<ValueBar>();
-        this.backgroundColor = ThemeUtils.getBackgroundColor();
+        //this.backgroundColor = ThemeUtils.getBackgroundColor();
         this.foregroundColor = ThemeUtils.getForegroundColor();
 
         createBars();
@@ -50,6 +60,10 @@ public class SortingVisualizer extends JPanel {
         createBars();
     }
 
+    /**
+     * Update the bars on the screen. This method should 
+     * be called after the values have been changed.
+     */
     public void updateBars() {
 
         int barWidth = (int) (this.getWidth() * 0.8) / values.size();
@@ -67,14 +81,19 @@ public class SortingVisualizer extends JPanel {
             int xCoord = xMidpoint - (values.size() * barWidth) / 2 + i * barWidth;
 
             bar.update(value, xCoord, yCoord, barWidth, barHeight);
-            bar.repaint();
-
         }
         // Required for the bars to be updated immediately.
         this.paintImmediately(0, 0, this.getWidth(), this.getHeight());
     }
     
+    /**
+     * Update the values and the bars. Calls the updateBars() method
+     * to update the bars on-screen.
+     * @param indexFrom: The index of the value to be moved.
+     * @param indexTo: The index where the value should be moved.
+     */
     public void update(int indexFrom, int indexTo) {
+
         // Move one value to a different index.
         int value = values.get(indexFrom);
         ValueBar bar = bars.get(indexFrom);
@@ -82,6 +101,8 @@ public class SortingVisualizer extends JPanel {
         values.remove(indexFrom);
         values.add(indexTo, value);
         
+        // Calculate the x coordinate of the bar
+        // and store it in the bar object.
         bar.move(this.getWidth() / 2 - (values.size() * bar.getWidth()) / 2 + indexTo * bar.getWidth());
         bars.remove(indexFrom);
         bars.add(indexTo, bar);
@@ -89,6 +110,9 @@ public class SortingVisualizer extends JPanel {
         updateBars();
     }
     
+    /**
+     * Create the bars that represent the values in the list.
+     */
     private void createBars() {
         
         int barWidth = (int) (this.getWidth() * 0.8) / values.size();
@@ -113,7 +137,6 @@ public class SortingVisualizer extends JPanel {
             ValueBar bar = new ValueBar(value, xCoord, yCoord, barWidth, barHeight, Color.WHITE);
             bars.add(bar);
         }
-        this.repaint();
     }
 
     @Override
@@ -127,6 +150,5 @@ public class SortingVisualizer extends JPanel {
 
         for (ValueBar bar : bars)
             bar.draw(g);
-        
     }
 }
