@@ -1,20 +1,33 @@
+/**
+ * Filename:    MainWindow.java
+ * Author:      Tomi Miettinen
+ * Date:        10/2023
+ * Description: The main window of the program. Contains
+ *              the visualizer and the control panel.
+ */
+
 package com.github.mietteinen.gui;
 
-import javax.swing.*;
-
-import com.formdev.flatlaf.FlatDarculaLaf;
-import com.formdev.flatlaf.FlatLightLaf;
 import com.github.mietteinen.algorithms.Algorithms;
 import com.github.mietteinen.utilities.ThemeUtils;
+import static com.github.mietteinen.utilities.ThemeUtils.createGridBagConstraints;
+
+import com.formdev.flatlaf.FlatLightLaf;
+import com.formdev.flatlaf.FlatDarculaLaf;
+
+import javax.swing.*;
 
 import java.awt.*;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+import static java.awt.GridBagConstraints.EAST;
+import static java.awt.GridBagConstraints.WEST;
+
+import java.io.File;
+
 import java.util.ArrayList;
 import java.util.Random;
 
-import static java.awt.GridBagConstraints.EAST;
-import static java.awt.GridBagConstraints.WEST;
 
 public class MainWindow extends JFrame {
     
@@ -97,7 +110,8 @@ public class MainWindow extends JFrame {
         mainPanel.setBackground(foregroundColor);
 
         settingsWindow = new SettingsWindow(this);
-
+        setLightMode(settingsWindow.getLightMode());
+        
         setupControlPanel();
 
         Algorithms.setSpeed(speedSlider.getValue());
@@ -137,10 +151,14 @@ public class MainWindow extends JFrame {
         for (int i = 0; i < size; i++) {
             list.add(random.nextInt(100 - 10 + 1) + 10);
         }
-
+        
         return list;
     }
 
+    public File getSettingsFile() {
+        return new File("settings.json");
+    }
+    
     /**
      * Sets the look and feel of the program to either
      * light or dark.
@@ -163,7 +181,7 @@ public class MainWindow extends JFrame {
         }
 
         SwingUtilities.updateComponentTreeUI(window);
-        SwingUtilities.updateComponentTreeUI(settingsWindow);
+        settingsWindow.updateTheme();
     }
 
     /**
@@ -341,30 +359,5 @@ public class MainWindow extends JFrame {
         controlPanel.add(speedSizePanel, createGridBagConstraints(3, 0, 1, 3, WEST));
         controlPanel.add(vSeparatorPanel, createGridBagConstraints(2, 0, 1, 3, WEST));
         controlPanel.add(buttonPanel, createGridBagConstraints(0, 0, 1, 2, WEST));
-    }
-
-    /**
-     * Creates a GridBagConstraints object with the given
-     * parameters. The fill is set to BOTH and the weight
-     * is set to 1.0.
-     * @param x: The x coordinate of the component.
-     * @param y: The y coordinate of the component.
-     * @param gridWidth: The width of the component.
-     * @param gridHeight: The height of the component.
-     * @param anchor: The anchor of the component.
-     * @return: The GridBagConstraints object.
-     */
-    protected GridBagConstraints createGridBagConstraints(int x, int y, int gridWidth, int gridHeight, int anchor) {
-
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.gridx = x;
-        gbc.gridy = y;
-        gbc.gridwidth = gridWidth;
-        gbc.gridheight = gridHeight;
-        gbc.weightx = 1.0;
-        gbc.weighty = 1.0;
-        gbc.fill = GridBagConstraints.BOTH;
-        gbc.anchor = anchor;
-        return gbc;
     }
 }
