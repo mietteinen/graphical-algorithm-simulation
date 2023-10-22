@@ -1,3 +1,13 @@
+/**
+ * Filename:    SortingVisualizer.java
+ * Author:      Tomi Miettinen
+ * Date:        10/2023
+ * Description: The visualization of sorting algorithms
+ *              is done through this class. It contains
+ *              logic to draw ValueBars on the screen
+ *              and to update them when the values change.
+ */
+
 package com.github.mietteinen.gui;
 
 import javax.swing.JPanel;

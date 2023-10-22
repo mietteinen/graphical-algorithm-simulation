@@ -1,3 +1,12 @@
+/**
+ * Filename:    Main.java
+ * Author:      Tomi Miettinen
+ * Date:        10/2023
+ * Description: This class is the main class of the project.
+ *              It is used to set the initial styling of the
+ *              GUI and to run the application.
+ */
+
 package com.github.mietteinen;
 
 import com.github.mietteinen.gui.MainWindow;

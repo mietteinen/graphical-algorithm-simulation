@@ -1,3 +1,12 @@
+/**
+ * Filename:    Algorithms.java
+ * Author:      Tomi Miettinen
+ * Date:        10/2023
+ * Description: Contains the implementations of different
+ *              sorting algorithms, specifically engineered
+ *              to work with the SortingVisualizer class.
+ */
+
 package com.github.mietteinen.algorithms;
 
 import com.github.mietteinen.gui.SortingVisualizer;
@@ -20,7 +29,7 @@ public class Algorithms {
         algorithms.addElement("Selection Sort");
         algorithms.addElement("Merge Sort");
     }
-
+    
     /**
      * Sorts the values using the bubble sort algorithm. Updates
      * the bars after each iteration, changing the color of the

@@ -1,3 +1,12 @@
+/**
+ * Filename:    ValueBar.java
+ * Author:      Tomi Miettinen
+ * Date:        10/2023
+ * Description: This class represents a single number of a list
+ *              as a custom-made, rounded rectangle. The height
+ *              of the bar is derived from the value.
+ */
+
 package com.github.mietteinen.gui;
 
 import java.awt.Color;
