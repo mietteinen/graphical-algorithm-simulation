@@ -14,6 +14,7 @@ import com.github.mietteinen.gui.ValueBar;
 
 import java.awt.Color;
 import java.util.ArrayList;
+import static java.lang.Math.log;
 
 import javax.swing.DefaultComboBoxModel;
 
@@ -351,7 +352,7 @@ public class Algorithms {
 
             try {    
 
-                Thread.sleep(50);
+                Thread.sleep((int) (timeBetweenFrames / log(lst.size())));
 
             } catch (InterruptedException e) {
 
