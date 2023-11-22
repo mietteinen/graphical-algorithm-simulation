@@ -149,7 +149,8 @@ public class SettingsWindow extends JDialog {
         
         // React to the change of the checkbox.
         lightModeCheckBox.addActionListener(e -> {
-                parent.refreshUI(lightModeCheckBox.isSelected());
+            settings.setLightMode(lightModeCheckBox.isSelected());
+            parent.refreshUI(settings.getLightMode());
         });
         mainPanel.add(lightModeCheckBox, createSettingGridBagConstraints(1, 1, 1, 1, GridBagConstraints.NORTH));
 
