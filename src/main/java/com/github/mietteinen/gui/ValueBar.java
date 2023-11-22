@@ -52,7 +52,8 @@ public class ValueBar extends JComponent {
         // Draw the bar.
         g2d.fill(bar);
 
-        // Outline the bar if its width is more than 2 pixels.
+        // Outline the bar if its width is more than 1 pixel
+        // and the user has selected to draw outlines.
         if (width > 1 && drawOutline) {
             g2d.setColor(Color.BLACK);
             g2d.draw(bar);
@@ -66,6 +67,7 @@ public class ValueBar extends JComponent {
      * @param y: The new y coordinate of the bar.
      * @param width: The new width of the bar.
      * @param height: The new height of the bar.
+     * @param outline: Whether the bar should be outlined or not.
      */
     public void update(int value, int x, int y, int width, int height, Boolean outline) {
         this.value = value;

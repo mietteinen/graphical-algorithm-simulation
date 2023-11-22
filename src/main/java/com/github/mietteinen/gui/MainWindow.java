@@ -111,7 +111,7 @@ public class MainWindow extends JFrame {
 
         mainPanel.setBackground(foregroundColor);
 
-        setLightMode(settingsWindow.getLightMode());
+        refreshUI(settingsWindow.getLightMode());
         
         setupControlPanel();
 
@@ -157,30 +157,6 @@ public class MainWindow extends JFrame {
 
     public File getSettingsFile() {
         return new File("settings.json");
-    }
-    
-    /**
-     * Sets the look and feel of the program to either
-     * light or dark.
-     * @param light: True if the light theme should be used.
-     */
-    public void setLightMode(boolean light) {
-
-        LookAndFeel newLookAndFeel;
-
-        if (light) {
-            newLookAndFeel = new FlatLightLaf();
-        } else {
-            newLookAndFeel = new FlatDarculaLaf();
-        }
-
-        try {
-            UIManager.setLookAndFeel(newLookAndFeel);
-        } catch (Exception e) {
-            System.out.println("Could not set system look and feel.");
-        }
-
-        refreshUI();
     }
 
     /**
@@ -363,9 +339,23 @@ public class MainWindow extends JFrame {
     /**
      * Refreshes the UI of the program.
      */
-    protected void refreshUI() {
+    protected void refreshUI(boolean light) {
 
         visualizer.setSettingsInstance(settingsWindow.getMainSettingsInstance());
+
+        LookAndFeel newLookAndFeel;
+
+        if (light) {
+            newLookAndFeel = new FlatLightLaf();
+        } else {
+            newLookAndFeel = new FlatDarculaLaf();
+        }
+
+        try {
+            UIManager.setLookAndFeel(newLookAndFeel);
+        } catch (Exception e) {
+            System.out.println("Could not set system look and feel.");
+        }
 
         SwingUtilities.updateComponentTreeUI(window);
         settingsWindow.updateTheme();

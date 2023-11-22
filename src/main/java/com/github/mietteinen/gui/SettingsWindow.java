@@ -84,10 +84,9 @@ public class SettingsWindow extends JDialog {
 
         // Create the settings panel struct.
         this.settings = new Settings(algorithmComboBox.getSelectedItem().toString(), 
-                                lightModeCheckBox.isSelected(),
-                                drawOutlineCheckBox.isSelected());
-        
-        // Load the settings from a settings.json file.
+                                     lightModeCheckBox.isSelected(),
+                                     drawOutlineCheckBox.isSelected());
+
         loadFromJSON();
     }
     
@@ -95,9 +94,7 @@ public class SettingsWindow extends JDialog {
      * Opens the settings window.
      */
     public void open() {
-        if (!isVisible()) {
-            setVisible(true);
-        }
+        setVisible(!isVisible());
     }
     
     /**
@@ -154,11 +151,7 @@ public class SettingsWindow extends JDialog {
         
         // React to the change of the checkbox.
         lightModeCheckBox.addActionListener(e -> {
-            if (lightModeCheckBox.isSelected()) {
-                parent.setLightMode(true);
-            } else {
-                parent.setLightMode(false);
-            }
+                parent.refreshUI(lightModeCheckBox.isSelected());
         });
         mainPanel.add(lightModeCheckBox, createSettingGridBagConstraints(1, 1, 1, 1, GridBagConstraints.NORTH));
 
@@ -172,13 +165,13 @@ public class SettingsWindow extends JDialog {
         // React to the change of the checkbox.
         drawOutlineCheckBox.addActionListener(e -> {
             settings.setDrawOutline(drawOutlineCheckBox.isSelected());
-            parent.refreshUI();
+            parent.refreshUI(settings.getLightMode());
         });
         mainPanel.add(drawOutlineCheckBox, createSettingGridBagConstraints(1, 2, 1, 1, GridBagConstraints.NORTH));
     }
     
     /**
-     * Sets up the save and load panel.
+     * Lays out the components for the save and load panel.
      */
     private void setupSaveLoadPanel() {
         
@@ -241,10 +234,11 @@ public class SettingsWindow extends JDialog {
             } catch (IOException e) {
                 System.out.println("IOException: " + e.getMessage());
                 infoTextArea.setText("Could not create settings file.");
+                return;
             }
         }
         
-        // Update the settings struct.
+        // Update the settings object with the current settings.
         settings.setAlgorithm(algorithmComboBox.getSelectedItem().toString());
         settings.setLightMode(lightModeCheckBox.isSelected());
         settings.setDrawOutline(drawOutlineCheckBox.isSelected());
@@ -267,7 +261,7 @@ public class SettingsWindow extends JDialog {
      * Loads the settings from a JSON file.
      */
     private void loadFromJSON() {
-        
+
         // Get the File object for the settings file.
         File settingsFile = parent.getSettingsFile();
         
@@ -305,18 +299,10 @@ public class SettingsWindow extends JDialog {
     private void applySettings() {
 
         algorithmComboBox.setSelectedItem(settings.getAlgorithm());
+        lightModeCheckBox.setSelected(settings.getLightMode());
+        drawOutlineCheckBox.setSelected(settings.getDrawOutline());
         
-        // Schedule the updates on the Event Dispatch Thread.
-        // This ensures that updates to the components are
-        // done after the initialization of SettingsWindow,
-        // preventing NullPointerExceptions.
-        SwingUtilities.invokeLater(() -> {
-
-            lightModeCheckBox.setSelected(settings.getLightMode());
-            //drawOutlineCheckBox.setSelected(settings.getDrawOutline());
-
-            parent.setLightMode(settings.getLightMode()); // Calls refreshUI() on the parent window.
-        });
+        parent.refreshUI(settings.getLightMode());
     }
     
     
