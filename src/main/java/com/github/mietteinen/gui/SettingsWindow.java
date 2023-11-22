@@ -86,8 +86,6 @@ public class SettingsWindow extends JDialog {
         this.settings = new Settings(algorithmComboBox.getSelectedItem().toString(), 
                                      lightModeCheckBox.isSelected(),
                                      drawOutlineCheckBox.isSelected());
-
-        loadFromJSON();
     }
     
     /**
@@ -260,7 +258,7 @@ public class SettingsWindow extends JDialog {
     /**
      * Loads the settings from a JSON file.
      */
-    private void loadFromJSON() {
+    protected void loadFromJSON() {
 
         // Get the File object for the settings file.
         File settingsFile = parent.getSettingsFile();

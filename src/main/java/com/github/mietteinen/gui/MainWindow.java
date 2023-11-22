@@ -116,6 +116,8 @@ public class MainWindow extends JFrame {
         setupControlPanel();
 
         Algorithms.setSpeed(speedSlider.getValue());
+
+        settingsWindow.loadFromJSON();
     }
 
     public void show() {
