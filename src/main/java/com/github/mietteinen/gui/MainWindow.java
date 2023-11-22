@@ -1,18 +1,33 @@
-package com.github.mietteinen.gui;
+/**
+ * Filename:    MainWindow.java
+ * Author:      Tomi Miettinen
+ * Date:        10/2023
+ * Description: The main window of the program. Contains
+ *              the visualizer and the control panel.
+ */
 
-import javax.swing.*;
+package com.github.mietteinen.gui;
 
 import com.github.mietteinen.algorithms.Algorithms;
 import com.github.mietteinen.utilities.ThemeUtils;
+import static com.github.mietteinen.utilities.ThemeUtils.createGridBagConstraints;
+
+import com.formdev.flatlaf.FlatLightLaf;
+import com.formdev.flatlaf.FlatDarculaLaf;
+
+import javax.swing.*;
 
 import java.awt.*;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+import static java.awt.GridBagConstraints.EAST;
+import static java.awt.GridBagConstraints.WEST;
+
+import java.io.File;
+
 import java.util.ArrayList;
 import java.util.Random;
 
-import static java.awt.GridBagConstraints.EAST;
-import static java.awt.GridBagConstraints.WEST;
 
 public class MainWindow extends JFrame {
     
@@ -20,6 +35,7 @@ public class MainWindow extends JFrame {
     private JFrame window;
     private JPanel mainPanel;
     private JPanel controlPanel;
+    private SettingsWindow settingsWindow;
     
     // All buttons.
     private JButton startButton;
@@ -53,22 +69,22 @@ public class MainWindow extends JFrame {
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         window.setLocationRelativeTo(null);
         window.setLayout(new BoxLayout(window.getContentPane(), BoxLayout.Y_AXIS));
-
+        
         mainPanel = new JPanel(new GridBagLayout());
         controlPanel = new JPanel(new GridBagLayout());
         
         updatePanelHeight();
-
+        
         // Add the panels to the window.
         window.add(mainPanel, BorderLayout.NORTH);
         window.add(controlPanel, BorderLayout.SOUTH);
-
+        
         // Add a component listener to the window to update the panel height.
         window.addComponentListener(new ComponentAdapter() {
             public void componentResized(ComponentEvent e) {
-
+                
                 updatePanelHeight();
-
+                
                 // Hide the labels of the sliders if the window is too small.
                 if (window.getWidth() < 1150 && window.getHeight() < 575) {
                     sizeSlider.setPaintLabels(false);
@@ -80,8 +96,10 @@ public class MainWindow extends JFrame {
             }
         });
         
-        visualizer = new SortingVisualizer(mainPanel, randomList(10));
-
+        settingsWindow = new SettingsWindow(this);
+        System.out.println(settingsWindow.getMainSettingsInstance());
+        visualizer = new SortingVisualizer(mainPanel, randomList(10), settingsWindow.getMainSettingsInstance());
+        
         // Set the constraints for the visualizer and add it to mainPanel.
         gbcVisualizer = new GridBagConstraints();
         gbcVisualizer.gridx = 0;
@@ -93,16 +111,20 @@ public class MainWindow extends JFrame {
 
         mainPanel.setBackground(foregroundColor);
 
+        refreshUI(settingsWindow.getLightMode());
+        
         setupControlPanel();
 
         Algorithms.setSpeed(speedSlider.getValue());
-
     }
 
     public void show() {
         window.setVisible(true);
     }
 
+    /**
+     * Updates the height of the main and control panels.
+     */
     public void updatePanelHeight() {
 
         int newMainPanelHeight = (int) (window.getHeight() * 0.7);
@@ -116,6 +138,11 @@ public class MainWindow extends JFrame {
         }
     }
 
+    /**
+     * Creates a list of random integers.
+     * @param size: The size of the list as Integer.
+     * @return: The list of random integers as ArrayList.
+     */
     public ArrayList<Integer> randomList(int size) {
 
         ArrayList<Integer> list = new ArrayList<Integer>();
@@ -124,11 +151,21 @@ public class MainWindow extends JFrame {
         for (int i = 0; i < size; i++) {
             list.add(random.nextInt(100 - 10 + 1) + 10);
         }
-
+        
         return list;
     }
 
-    private void sort() {
+    public File getSettingsFile() {
+        return new File("settings.json");
+    }
+
+    /**
+     * Sorts the list using the selected algorithm. Sorting
+     * is done on a separate thread so the other one can be
+     * used to access the GUI.
+     * @param algorithm: The algorithm to be used as String.
+     */
+    private void sort(String algorithm) {
         Thread sortingThread = new Thread(() -> {
 
             // Enable and disable the wanted buttons
@@ -137,7 +174,23 @@ public class MainWindow extends JFrame {
             startButton.setEnabled(false);
             stopButton.setEnabled(true);
 
-            Algorithms.bubbleSort(visualizer);
+            switch (algorithm) {
+
+                case "Bubble Sort":
+                    Algorithms.bubbleSort(visualizer);
+                    break;
+
+                case "Selection Sort":
+                    Algorithms.selectionSort(visualizer);
+                    break;
+
+                case "Merge Sort":
+                    Algorithms.mergeSortMain(visualizer);
+                    break;
+
+                default:
+                    break;
+            }
 
             // Enable and disable the wanted buttons
             // at the end of the sorting.
@@ -156,6 +209,10 @@ public class MainWindow extends JFrame {
         sortingThread.start();
     }
 
+    /**
+     * Sets up the control panel. Adds all the components
+     * to the panel.
+     */
     private void setupControlPanel() {
 
         // Set up the control panel.
@@ -179,14 +236,14 @@ public class MainWindow extends JFrame {
         // Create a button that starts the sorting.
         startButton = new JButton("Start");
         startButton.addActionListener(e -> {
-            sort();
+            sort(settingsWindow.getSelectedAlgorithm());
         });
         
         stopButton = new JButton("Stop");
-        settingsButton = new JButton("S");
+        settingsButton = new JButton("Settings");
 
         settingsButton.addActionListener(e -> {
-            
+            settingsWindow.open();
         });
         
         buttonPanel.add(startButton, createGridBagConstraints(0, 0, 1, 1, WEST));
@@ -279,17 +336,29 @@ public class MainWindow extends JFrame {
         controlPanel.add(buttonPanel, createGridBagConstraints(0, 0, 1, 2, WEST));
     }
 
-    private GridBagConstraints createGridBagConstraints(int x, int y, int gridWidth, int gridHeight, int anchor) {
+    /**
+     * Refreshes the UI of the program.
+     */
+    protected void refreshUI(boolean light) {
 
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.gridx = x;
-        gbc.gridy = y;
-        gbc.gridwidth = gridWidth;
-        gbc.gridheight = gridHeight;
-        gbc.weightx = 1.0;
-        gbc.weighty = 1.0;
-        gbc.fill = GridBagConstraints.BOTH;
-        gbc.anchor = anchor;
-        return gbc;
+        visualizer.setSettingsInstance(settingsWindow.getMainSettingsInstance());
+
+        LookAndFeel newLookAndFeel;
+
+        if (light) {
+            newLookAndFeel = new FlatLightLaf();
+        } else {
+            newLookAndFeel = new FlatDarculaLaf();
+        }
+
+        try {
+            UIManager.setLookAndFeel(newLookAndFeel);
+        } catch (Exception e) {
+            System.out.println("Could not set system look and feel.");
+        }
+
+        SwingUtilities.updateComponentTreeUI(window);
+        settingsWindow.updateTheme();
+        visualizer.updateBars();
     }
 }
