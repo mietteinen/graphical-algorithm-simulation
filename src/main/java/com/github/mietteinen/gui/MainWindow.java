@@ -97,7 +97,6 @@ public class MainWindow extends JFrame {
         });
         
         settingsWindow = new SettingsWindow(this);
-        System.out.println(settingsWindow.getMainSettingsInstance());
         visualizer = new SortingVisualizer(mainPanel, randomList(10), settingsWindow.getMainSettingsInstance());
         
         // Set the constraints for the visualizer and add it to mainPanel.

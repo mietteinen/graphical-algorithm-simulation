@@ -38,7 +38,7 @@ public class SortingVisualizer extends JPanel {
         this.bars = new ArrayList<ValueBar>();
         //this.backgroundColor = ThemeUtils.getBackgroundColor();
         this.foregroundColor = ThemeUtils.getForegroundColor();
-        System.out.println(settings);
+
         createBars();
 
         // Add a component listener to the panel to update the bars when the window is resized.
