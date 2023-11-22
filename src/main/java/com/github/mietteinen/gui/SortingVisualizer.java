@@ -38,7 +38,7 @@ public class SortingVisualizer extends JPanel {
         this.bars = new ArrayList<ValueBar>();
         //this.backgroundColor = ThemeUtils.getBackgroundColor();
         this.foregroundColor = ThemeUtils.getForegroundColor();
-
+        System.out.println(settings);
         createBars();
 
         // Add a component listener to the panel to update the bars when the window is resized.
@@ -72,10 +72,12 @@ public class SortingVisualizer extends JPanel {
         int barWidth = (int) (this.getWidth() * 0.8) / values.size();
         int heightMultiplier = (int) (this.getHeight() * 0.8) / Collections.max(values);
         int xMidpoint = this.getWidth() / 2;
+        boolean drawOutline;
     
         // Update each bar.
         for (int i = 0; i < bars.size(); i++) {
 
+            drawOutline = settings.getDrawOutline();
             ValueBar bar = bars.get(i);
             int value = values.get(i);
 
@@ -83,7 +85,7 @@ public class SortingVisualizer extends JPanel {
             int yCoord = (this.getHeight() - barHeight) / 2;
             int xCoord = xMidpoint - (values.size() * barWidth) / 2 + i * barWidth;
 
-            bar.update(value, xCoord, yCoord, barWidth, barHeight, settings.getDrawOutline());
+            bar.update(value, xCoord, yCoord, barWidth, barHeight, drawOutline);
         }
         // Required for the bars to be updated immediately.
         this.paintImmediately(0, 0, this.getWidth(), this.getHeight());
@@ -153,5 +155,9 @@ public class SortingVisualizer extends JPanel {
 
         for (ValueBar bar : bars)
             bar.draw(g);
+    }
+
+    protected void setSettingsInstance(Settings newSettings) {
+        this.settings = newSettings;
     }
 }

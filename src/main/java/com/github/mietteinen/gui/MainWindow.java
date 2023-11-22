@@ -97,6 +97,7 @@ public class MainWindow extends JFrame {
         });
         
         settingsWindow = new SettingsWindow(this);
+        System.out.println(settingsWindow.getMainSettingsInstance());
         visualizer = new SortingVisualizer(mainPanel, randomList(10), settingsWindow.getMainSettingsInstance());
         
         // Set the constraints for the visualizer and add it to mainPanel.
@@ -115,7 +116,6 @@ public class MainWindow extends JFrame {
         setupControlPanel();
 
         Algorithms.setSpeed(speedSlider.getValue());
-
     }
 
     public void show() {
@@ -364,6 +364,9 @@ public class MainWindow extends JFrame {
      * Refreshes the UI of the program.
      */
     protected void refreshUI() {
+
+        visualizer.setSettingsInstance(settingsWindow.getMainSettingsInstance());
+
         SwingUtilities.updateComponentTreeUI(window);
         settingsWindow.updateTheme();
         visualizer.updateBars();
